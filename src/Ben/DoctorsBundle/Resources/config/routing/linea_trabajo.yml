@@ -1,0 +1,40 @@
+linea_trabajo:
+    path:     /
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:index" }
+
+linea_trabajo_ajax:
+    path:     /ajaxlist
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:ajaxList" }
+    requirements: { _method: post }
+
+linea_trabajo_show:
+    path:     /{id}/show
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:show" }
+
+linea_trabajo_new:
+    path:     /new
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:new" }
+
+linea_trabajo_create:
+    path:     /create
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:create" }
+    requirements: { _method: post }
+
+linea_trabajo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:edit" }
+
+linea_trabajo_update:
+    path:     /{id}/update
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:update" }
+    requirements: { _method: post|put }
+
+linea_trabajo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:delete" }
+    requirements: { _method: post|delete }
+
+linea_trabajo_remove:
+    path:     /remove
+    defaults: { _controller: "BenDoctorsBundle:LineaTrabajo:remove" }
+    requirements: { _method: post|delete }

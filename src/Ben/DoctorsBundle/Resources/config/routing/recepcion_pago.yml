@@ -1,0 +1,40 @@
+recepcion_pago:
+    path:     /
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:index" }
+
+recepcion_pago_ajax:
+    path:     /ajaxlist
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:ajaxList" }
+    requirements: { _method: post }
+
+recepcion_pago_show:
+    path:     /{id}/show
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:show" }
+
+recepcion_pago_new:
+    path:     /new
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:new" }
+
+recepcion_pago_create:
+    path:     /create
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:create" }
+    requirements: { _method: post }
+
+recepcion_pago_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:edit" }
+
+recepcion_pago_update:
+    path:     /{id}/update
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:update" }
+    requirements: { _method: post|put }
+
+recepcion_pago_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:delete" }
+    requirements: { _method: post|delete }
+
+recepcion_pago_remove:
+    path:     /remove
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:remove" }
+    requirements: { _method: post|delete }

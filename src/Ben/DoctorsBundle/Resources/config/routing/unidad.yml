@@ -1,0 +1,40 @@
+unidad:
+    path:     /
+    defaults: { _controller: "BenDoctorsBundle:Unidad:index" }
+
+unidad_ajax:
+    path:     /ajaxlist
+    defaults: { _controller: "BenDoctorsBundle:Unidad:ajaxList" }
+    requirements: { _method: post }
+
+unidad_show:
+    path:     /{id}/show
+    defaults: { _controller: "BenDoctorsBundle:Unidad:show" }
+
+unidad_new:
+    path:     /new
+    defaults: { _controller: "BenDoctorsBundle:Unidad:new" }
+
+unidad_create:
+    path:     /create
+    defaults: { _controller: "BenDoctorsBundle:Unidad:create" }
+    requirements: { _method: post }
+
+unidad_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BenDoctorsBundle:Unidad:edit" }
+
+unidad_update:
+    path:     /{id}/update
+    defaults: { _controller: "BenDoctorsBundle:Unidad:update" }
+    requirements: { _method: post|put }
+
+unidad_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BenDoctorsBundle:Unidad:delete" }
+    requirements: { _method: post|delete }
+
+unidad_remove:
+    path:     /remove
+    defaults: { _controller: "BenDoctorsBundle:Unidad:remove" }
+    requirements: { _method: post|delete }

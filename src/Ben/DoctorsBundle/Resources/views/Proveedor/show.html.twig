@@ -1,0 +1,74 @@
+{% extends "BenDoctorsBundle::layout.html.twig" %}
+{% block title %}
+Tableau de bord | {{ parent() }}
+{% endblock %}
+{% block body -%}
+<h3><span class="glyphicon glyphicon-briefcase"></span> Proveedor</h3>
+<div class="row">
+    <div class="col-md-10">   
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <th>Código</th>
+                <td>{{ entity.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Razón social</th>
+                <td>{{ entity.razonSocial }}</td>
+            </tr>
+            <tr>
+                <th>Nombre comercial</th>
+                <td>{{ entity.nombreComercial }}</td>
+            </tr>
+            <tr>
+                <th>Área</th>
+                <td>{{ entity.area|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Dirección</th>
+                <td>{{ entity.direccion|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>NIT</th>
+                <td>{{ entity.nit }}</td>
+            </tr>
+            <tr>
+                <th>NRC</th>
+                <td>{{ entity.nrc }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono</th>
+                <td>{{ entity.tel }}</td>
+            </tr>
+            <tr>
+                <th>Fax</th>
+                <td>{{ entity.fax }}</td>
+            </tr>
+            <tr>
+                <th>Contacto</th>
+                <td>{{ entity.contacto|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Cargo</th>
+                <td>{{ entity.contactoCargo }}</td>
+            </tr>
+            <tr>
+                <th>Correo electrónico</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    </div>
+    <div class="col-md-2">
+        <form id="deleteForm" action="{{ path('proveedor_delete', { 'id': entity.id }) }}" method="POST">
+            <a class="btn btn-primary btn-block" href="{{ path('proveedor') }}">Ver listado</a>
+            <a class="btn btn-info btn-block" href="{{ path('proveedor_edit', { 'id': entity.id }) }}">Editar</a>
+            <a class="btn btn-info btn-block" id="btnPrint"><span class="glyphicon glyphicon-print"></span> Imprimir</a>
+            <hr>
+            <button class="btn btn-danger btn-block" type="submit">Eliminar</button>
+            {{ form_widget(delete_form) }}
+        </form> 
+    </div>
+</div>
+{% endblock %}

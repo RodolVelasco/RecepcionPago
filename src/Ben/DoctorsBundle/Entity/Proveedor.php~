@@ -1,0 +1,121 @@
+<?php
+
+namespace Ben\DoctorsBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Proveedor
+ *
+ * @ORM\Table(name="proveedor")
+ * @ORM\Entity(repositoryClass="Ben\DoctorsBundle\Entity\ProveedorRepository")
+ */
+class Proveedor
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=255)
+     */
+    private $codigo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="razon_social", type="string", length=255)
+     */
+    private $razonSocial;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_comercial", type="string", length=255)
+     */
+    private $nombreComercial;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="area", type="string", length=2000)
+     */
+    private $area;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=255)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nit", type="string", length=255)
+     */
+    private $nit;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nrc", type="string", length=255)
+     */
+    private $nrc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel", type="string", length=255)
+     */
+    private $tel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fax", type="string", length=255)
+     */
+    private $fax;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contacto", type="string", length=255)
+     */
+    private $contacto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contacto_cargo", type="string", length=255)
+     */
+    private $contactoCargo;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     */
+    private $email;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Ben\DoctorsBundle\Entity\RecepcionPago", mappedBy="proveedor")
+     */
+    protected $recepcion_pagos;
+
+    public function __construct()
+    {
+        $this->recepcion_pagos = new \Doctrine\Common\Collections\ArrayCollection();
+
+    }
+
+    
+}

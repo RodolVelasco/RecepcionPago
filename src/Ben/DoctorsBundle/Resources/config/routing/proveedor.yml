@@ -1,0 +1,40 @@
+proveedor:
+    path:     /
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:index" }
+
+proveedor_ajax:
+    path:     /ajaxlist
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:ajaxList" }
+    requirements: { _method: post }
+
+proveedor_show:
+    path:     /{id}/show
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:show" }
+
+proveedor_new:
+    path:     /new
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:new" }
+
+proveedor_create:
+    path:     /create
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:create" }
+    requirements: { _method: post }
+
+proveedor_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:edit" }
+
+proveedor_update:
+    path:     /{id}/update
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:update" }
+    requirements: { _method: post|put }
+
+proveedor_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:delete" }
+    requirements: { _method: post|delete }
+
+proveedor_remove:
+    path:     /remove
+    defaults: { _controller: "BenDoctorsBundle:Proveedor:remove" }
+    requirements: { _method: post|delete }
