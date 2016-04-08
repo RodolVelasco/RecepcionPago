@@ -1,0 +1,25 @@
+RECEPCION PAGO
+
+NUEVA URL
+http://mws-rodolvelasco.c9users.io/RecepcionPago/web/app_dev.php/login
+
+user:       
+pwd:        
+
+Iniciar el servidor web
+Ir a Run->Run with->Apache httpd(PHP,HTML)
+
+
+PHPMyAdmin
+https://mws-rodolvelasco.c9users.io/phpmyadmin
+usr: rodolvelasco
+sin  password
+===========================================================
+GITHUB
+
+git push -u origin master
+
+===========================================================
+
+php app/console doctrine:generate:entities Ben/DoctorsBundle/Entity/
+php app/console doctrine:schema:update --force

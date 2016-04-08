@@ -52,11 +52,43 @@ class UnidadController extends Controller
                     'pagination' => $pagination,
                     ));
     }
+    
+    /**
+     * Creates a new Unidad entity.
+     * @Secure(roles="ROLE_USER")
+     *
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new Unidad();
+        $form = $this->createForm(new UnidadType(1), $entity);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            //$currentUser = $this->container->get('security.context')->getToken()->getUser();
+            //$entity->setUser($currentUser);
+            $em = $this->getDoctrine()->getManager();
+            /*foreach ($entity->getLineatrabajos() as $item) {
+                $item->getMeds()->minusCount($item->getCount());
+            }*/
+            $em->persist($entity);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('info', "La Unidad ha sido creada exitosamente.");
+            return $this->redirect($this->generateUrl('unidad_show', array('id' => $entity->getId())));
+        }
+
+        return $this->render('BenDoctorsBundle:Unidad:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+    }
+    
     /**
      * Creates a new Unidad entity.
      *
      */
-    public function createAction(Request $request)
+    public function create1Action(Request $request)
     {
 
         $entity = new Unidad();
@@ -134,13 +166,14 @@ class UnidadController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('BenDoctorsBundle:Unidad')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Unidad entity.');
         }
+        
         $editForm = $this->createForm(new UnidadType(), $entity);
+        
         $deleteForm = $this->createDeleteForm($id);
-        // $cities = $em->getRepository('BenDoctorsBundle:Proveedor')->getCities();
 
         return $this->render('BenDoctorsBundle:Unidad:edit.html.twig', array(
             'entity'      => $entity,
@@ -165,7 +198,7 @@ class UnidadController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new UnidadType(), $entity);
+        $editForm = $this->createForm(new UnidadType($entity->getAnio()), $entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {

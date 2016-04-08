@@ -3,7 +3,7 @@
 Tableau de bord | {{ parent() }}
 {% endblock %}
 {% block body %}
-<h3><span class="glyphicon glyphicon-tower"></span> Listado de línea de trabajo</h3>
+<h3><span class="glyphicon glyphicon-stats"></span> Listado de línea de trabajo</h3>
 <form  id="jsForm" role="form" method="post" action="">
         <input id="pagenumber" type="hidden" name="searchParam[page]" value="1"> 
         <input id="sortBy" type="hidden" name="searchParam[sortBy]" value="all"> 
@@ -26,7 +26,7 @@ Tableau de bord | {{ parent() }}
               </button>
               <ul class="dropdown-menu" role="menu">
                 {# <li><a href="#" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-search"></span> Búsqueda avanzada</a></li> #}
-                <li><a href="{{ path('linea_trabajo_new') }}"><span class="glyphicon glyphicon-plus"></span> Agregar</a></li>
+                {# <li><a href="{{ path('linea_trabajo_new') }}"><span class="glyphicon glyphicon-plus"></span> Agregar</a></li> #}
                 <li><a href="#" id="js-delete"><span class="glyphicon glyphicon-trash"></span> Borrar</a></li>
               </ul>
             </div>
@@ -40,6 +40,8 @@ Tableau de bord | {{ parent() }}
                 <th class="hidden-print"><input id="checkall" type="checkbox" value=""></th>
                 <th class="sortable"><a href="#" class="js-sort" data-order="codigo">Código<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
                 <th class="sortable"><a href="#" class="js-sort" data-order="nombre">Nombre<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th class="sortable"><a href="#" class="js-sort" data-order="periodo">Periodo<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th class="sortable"><a href="#" class="js-sort" data-order="estado">Estado<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
                 <th class="hidden-print">Acciones</th>
             </tr>
             </thead>

@@ -37,6 +37,25 @@ class Unidad
      * @ORM\Column(name="codigo", type="string", length=255)
      */
     private $codigo;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Ben\DoctorsBundle\Entity\Periodo", inversedBy="unidades")
+     * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
+     *   
+     */
+    private $anio;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Ben\DoctorsBundle\Entity\Estado", inversedBy="unidades")
+     * @ORM\JoinColumn(name="estado_id", referencedColumnName="id")
+     *   
+     */
+    private $estado;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Ben\DoctorsBundle\Entity\LineaTrabajo", mappedBy="unidad", cascade={"remove", "persist"})
+    */
+    protected $lineatrabajos;
 
     /**
      * @ORM\OneToMany(targetEntity="Ben\DoctorsBundle\Entity\RecepcionPago", mappedBy="unidad")
@@ -46,7 +65,7 @@ class Unidad
     public function __construct()
     {
         $this->recepcion_pagos = new ArrayCollection();
-
+        $this->lineatrabajos = new ArrayCollection();
     }
 
     public function __toString()
@@ -141,5 +160,85 @@ class Unidad
     public function getCodigo()
     {
         return $this->codigo;
+    }
+
+    /**
+     * Set anio
+     *
+     * @param integer $anio
+     * @return Unidad
+     */
+    public function setAnio($anio)
+    {
+        $this->anio = $anio;
+
+        return $this;
+    }
+
+    /**
+     * Get anio
+     *
+     * @return integer 
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     * @return Unidad
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+    
+    /**
+     * Add lineatrabajos
+     *
+     * @param \Ben\DoctorsBundle\Entity\LineaTrabajo $lineatrabajos
+     * @return LineaTrabajo
+     */
+    public function addLineatrabajo(\Ben\DoctorsBundle\Entity\LineaTrabajo $lineatrabajos)
+    {
+        $lineatrabajos->setUnidad($this);
+        $this->lineatrabajos->add($lineatrabajos);
+
+        return $this;
+    }
+
+    /**
+     * Remove lineatrabajos
+     *
+     * @param \Ben\DoctorsBundle\Entity\LineaTrabajo $lineatrabajos
+     */
+    public function removeLineatrabajo(\Ben\DoctorsBundle\Entity\LineaTrabajo $lineatrabajos)
+    {
+        $this->lineatrabajos->removeElement($lineatrabajos);
+    }
+
+    /**
+     * Get consultationmeds
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection 
+     */
+    public function getLineatrabajos()
+    {
+        return $this->lineatrabajos;
     }
 }

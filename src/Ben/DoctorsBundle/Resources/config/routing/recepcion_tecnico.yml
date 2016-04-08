@@ -1,0 +1,44 @@
+recepcion_tecnico:
+    path:     /
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:index" }
+
+recepcion_tecnico_ajax:
+    path:     /ajaxlist
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:ajaxList" }
+    requirements: { _method: post }
+
+recepcion_tecnico_show:
+    path:     /{id}/show
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:show" }
+
+recepcion_tecnico_new:
+    path:     /new
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:new" }
+
+recepcion_tecnico_create:
+    path:     /create
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:create" }
+    requirements: { _method: post }
+
+recepcion_tecnico_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:edit" }
+
+recepcion_tecnico_update:
+    path:     /{id}/update
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:update" }
+    requirements: { _method: post|put }
+
+recepcion_tecnico_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:delete" }
+    requirements: { _method: post|delete }
+
+recepcion_tecnico_remove:
+    path:     /remove
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:remove" }
+    requirements: { _method: post|delete }
+
+select_linea_trabajos:
+    path:     /linea_trabajos
+    defaults: { _controller: "BenDoctorsBundle:RecepcionTecnico:lineaTrabajo" }

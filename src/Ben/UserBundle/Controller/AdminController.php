@@ -63,10 +63,10 @@ class AdminController extends Controller
             $entity->getImage()->upload();
 
             $this->getDoctrine()->getManager()->flush();
-            $this->get('session')->getFlashBag()->add('info', "L'utilisateur a été ajouté avec succès.");
+            $this->get('session')->getFlashBag()->add('info', "El usuario fue almacenado exitosamente.");
             return $this->redirect($this->generateUrl('ben_show_user', array('id' => $entity->getId())));
         }
-        $this->get('session')->getFlashBag()->add('danger', "Il y a des erreurs dans le formulaire soumis !");
+        $this->get('session')->getFlashBag()->add('danger', "Se encontraron errores en el formulario presentado !");
 
         return $this->render('BenUserBundle:admin:new.html.twig', array('entity' => $entity, 'form' => $form->createView()));
     }
@@ -78,7 +78,7 @@ class AdminController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('BenUserBundle:user')->find($id);
-        if (!$entity) throw $this->createNotFoundException('Unable to find posts entity.');
+        if (!$entity) throw $this->createNotFoundException('Unable to find Usuario entity.');
 
         return $this->render('BenUserBundle:admin:show.html.twig', array('entity' => $entity));
     }
@@ -101,7 +101,7 @@ class AdminController extends Controller
         $form->bind($request);
         /* check if user has admin role */
         if (in_array('ROLE_ADMIN', $user->getRoles())){
-            $this->get('session')->getFlashBag()->add('danger', "impossible de modifier les informations d'un administrateur de cette interface");
+            $this->get('session')->getFlashBag()->add('danger', "Imposible editar la información de un administrador de esta interfaz");
             return $this->redirect($this->generateUrl('ben_users'));
         }
         if ($form->isValid()) {
@@ -110,10 +110,10 @@ class AdminController extends Controller
             $user->getImage()->upload();
 
             $this->getDoctrine()->getManager()->flush();
-            $this->get('session')->getFlashBag()->add('info', "Vos modifications ont été enregistrées.");
+            $this->get('session')->getFlashBag()->add('info', "Modificaciones almacenadas exitosamente.");
             return $this->redirect($this->generateUrl('ben_edit_user', array('id' => $user->getId())));
         }
-        $this->get('session')->getFlashBag()->add('danger', "Il y a des erreurs dans le formulaire soumis !");
+        $this->get('session')->getFlashBag()->add('danger', "Se encontraron errores en el formulario presentado !");
         
         return $this->render('BenUserBundle:admin:edit.html.twig', array('entity' => $user, 'form' => $form->createView()));
     }
@@ -137,10 +137,10 @@ class AdminController extends Controller
         $userManager = $this->get('fos_user.user_manager');
         foreach( $users as $id){
             $user = $userManager->findUserBy(array('id' => $id));
-            if($loginUser == $user) return new Response('Impossible de supprimer cet utilisateur');
+            if($loginUser == $user) return new Response('Imposible eliminar al usuario técnico');
             $userManager->deleteUser($user);
         }
-        return new Response('supression effectué avec succès');
+        return new Response('Usuario eliminado exitosamente');
     } 
 
     /**
@@ -188,7 +188,7 @@ class AdminController extends Controller
                     'entities' => $entities,
                     ));
          $response->headers->set('Content-Type', 'text/csv');
-         $response->headers->set('Content-Disposition', 'attachment; filename="contacts.csv"');
+         $response->headers->set('Content-Disposition', 'attachment; filename="usuarios.csv"');
 
         return $response;
     }
@@ -225,10 +225,10 @@ class AdminController extends Controller
             $entity->getImage()->upload();
                
             $em->flush();
-            $this->get('session')->getFlashBag()->add('info', "Vos modifications ont été enregistrées.");
+            $this->get('session')->getFlashBag()->add('info', "Cambios almacenados exitosamente.");
             return $this->redirect($this->generateUrl('ben_profile_edit', array('name' => $entity->getId())));
         }
-        $this->get('session')->getFlashBag()->add('danger', "Il y a des erreurs dans le formulaire soumis !");
+        $this->get('session')->getFlashBag()->add('danger', "Se encontraron errores en el formulario presentado !");
 
         return $this->render('BenUserBundle:myProfile:edit.html.twig', array(
                     'entity' => $entity,

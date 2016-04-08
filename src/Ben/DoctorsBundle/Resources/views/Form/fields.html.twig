@@ -12,11 +12,9 @@
     {% if label is empty %}
         {% set label = name|humanize %}
     {% endif %}
-    <label class="col-md-6 control-label" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        <label class="col-md-6 control-label" {% if 'checkbox' in block_prefixes %}style="vertical-align: top; padding: 1px;"{% endif %} {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
 {% endspaceless %}
 {% endblock form_label %}
-
-
 
 {% block form_widget_simple %}
 {% spaceless %}
@@ -85,7 +83,15 @@
 {# checkbox #}
 {% block checkbox_widget %}
 {% spaceless %}
-<input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
+    {# {% for block in block_prefixes %} {{ block }} {% endfor %} #}
+    {# {% if '_ben_recepcion_pago_imageFile_delete' in block_prefixes %}
+       <div class="col-md-1 col-sm-push-1" style="padding: 0px;">
+    {% else %} #}
+       <div class="col-md-6">
+    {# {% endif %} #}
+        <input type="checkbox" class="form-control" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
+    </div>
+    
 {% endspaceless %}
 {% endblock checkbox_widget %}
 

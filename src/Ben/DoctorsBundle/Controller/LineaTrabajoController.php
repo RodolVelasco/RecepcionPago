@@ -90,7 +90,7 @@ class LineaTrabajoController extends Controller
     public function newAction()
     {
         $entity = new LineaTrabajo();
-        $form = $this->createForm(new LineaTrabajoType(), $entity);
+        $form = $this->createForm(new LineaTrabajoType(0), $entity);
         $em = $this->getDoctrine()->getManager();
         // $cities = $em->getRepository('BenDoctorsBundle:Proveedor')->getCities();
 
@@ -138,7 +138,21 @@ class LineaTrabajoController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Línea de trabajo entity.');
         }
-        $editForm = $this->createForm(new LineaTrabajoType(), $entity);
+        
+        $em = $this->getDoctrine()->getManager();
+		$query = $em->createQuery(
+				    'SELECT P
+				    FROM BenDoctorsBundle:Periodo P
+					WHERE P.periodo = :anio'
+				);
+		$query->setParameter('anio', $entity->getAnio());
+		$periodos = $query->getResult();
+		$periodoId = 0;
+        foreach($periodos as $periodo){
+            $periodoId = $periodo->getId();
+        }
+        
+        $editForm = $this->createForm(new LineaTrabajoType($periodoId), $entity);
         $deleteForm = $this->createDeleteForm($id);
         // $cities = $em->getRepository('BenDoctorsBundle:Proveedor')->getCities();
 
@@ -165,7 +179,7 @@ class LineaTrabajoController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new LineaTrabajoType(), $entity);
+        $editForm = $this->createForm(new LineaTrabajoType($entity->getAnio()), $entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {

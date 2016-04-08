@@ -1,16 +1,16 @@
 {% extends "BenUserBundle::layout.html.twig" %}
 {% block title %}
-Tableau de bord | {{ parent() }}
+Usuarios | {{ parent() }}
 {% endblock %}
 {% block body %}
 
-<h3><span class="glyphicon glyphicon-user"></span> Gestion des médecins</h3>
+<h3><span class="glyphicon glyphicon-user"></span> Usuarios</h3>
         <form  id="jsForm" role="form" method="post" action="">
           <input id="pagenumber" type="hidden" name="searchParam[page]" value="1"> 
             <div class="row hide-print">
               <div class="col-md-5 form-group">
                 <div class="input-group">
-                  <input type="text" name="searchParam[keyword]" class="form-control" placeholder="Search">
+                  <input type="text" name="searchParam[keyword]" class="form-control" placeholder="Buscar">
                   <div class="input-group-btn">
                   <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                   </div><!-- /btn-group -->
@@ -30,22 +30,22 @@ Tableau de bord | {{ parent() }}
 
               <div class="col-lg-5">
                 <div class="btn-group pull-right">              
-                  <button class="btn btn-primary "><span class="glyphicon glyphicon-cog"></span>  Selectioner une action</button>
+                  <button class="btn btn-primary "><span class="glyphicon glyphicon-cog"></span>  Seleccione una acción</button>
                   <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                   </button>
                   <span class="dropdown-arrow dropdown-arrow-inverse"></span>
                   <ul class="dropdown-menu dropdown-inverse">
-                      <li><a href="{{ path('ben_new_user') }}"><span class="glyphicon glyphicon-plus"></span> Ajouter un utilisateur</a></li>
-                      <li><a href="#" class="js-enable" data-action="1"><span class="glyphicon glyphicon-ok-circle"></span> Activer</a></li>
-                      <li><a href="#" class="js-enable" data-action="0"><span class="glyphicon glyphicon-ban-circle"></span> Désctiver</a></li>
-                      <li><a href="#" class="js-promote" data-action="USER"><span class="glyphicon glyphicon-user"></span> Promote to user</a></li>
-                      <li><a href="#" class="js-promote" data-action="MANAGER"><span class="glyphicon glyphicon-user"></span> Promote to manager</a></li>
-                      <li><a href="#" class="js-promote" data-action="ADMIN"><span class="glyphicon glyphicon-user"></span> Promote to Admin</a></li>
+                      <li><a href="{{ path('ben_new_user') }}"><span class="glyphicon glyphicon-plus"></span> Agregar usuario</a></li>
+                      <li><a href="#" class="js-enable" data-action="1"><span class="glyphicon glyphicon-ok-circle"></span> Activar</a></li>
+                      <li><a href="#" class="js-enable" data-action="0"><span class="glyphicon glyphicon-ban-circle"></span> Inactivar</a></li>
+                      <li><a href="#" class="js-promote" data-action="USER"><span class="glyphicon glyphicon-user"></span> Promover a técnico</a></li>
+                      <li><a href="#" class="js-promote" data-action="MANAGER"><span class="glyphicon glyphicon-user"></span> Promover a supervisor</a></li>
+                      <li><a href="#" class="js-promote" data-action="ADMIN"><span class="glyphicon glyphicon-user"></span> Promover a Administrador</a></li>
                       <li class="divider"></li>
-                      <li><a href="{{ path('ben_users_export') }}"><span class="glyphicon glyphicon-export"></span> Exporter vers csv</a></li>
-                      <li><a id="btnPrint"><span class="glyphicon glyphicon-print"></span> imprimer</a></li>
-                      <li><a href="#" id="js-delete"><span class="glyphicon glyphicon-trash"></span> Supprimer</a></li>
+                      <li><a href="{{ path('ben_users_export') }}"><span class="glyphicon glyphicon-export"></span> Exportar a csv</a></li>
+                      <li><a id="btnPrint"><span class="glyphicon glyphicon-print"></span> Imprimir</a></li>
+                      <li><a href="#" id="js-delete"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
                   </ul>
                 </div>
               </div><!-- /.col-lg-2 -->
@@ -55,18 +55,18 @@ Tableau de bord | {{ parent() }}
                 <thead>
                     <tr>
                         <th><input id="checkall" type="checkbox" value=""></th>
-                        <th class="col-md-2">Identifiant</th>
-                        <th>Nom et prénom</th>
-                        <th>Email</th>
-                        <th>Tél</th>
-                        <th>Statut</th>
-                        <th class="hide-print">action</th>
+                        <th class="col-md-2">Usuario</th>
+                        <th>Nombre y apellido</th>
+                        <th>Correo electrónico</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th class="hide-print">Acción</th>
                     </tr>
                 </thead>
                 <tbody id="dataContainer"></tbody>
             </table>
             <div>
-              <em><strong>Total:</strong> {{ entitiesLength }} utilisateur</em>
+              <em><strong>Total:</strong> {{ entitiesLength }} usuarios</em>
             </div>
         </form>
    

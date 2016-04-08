@@ -3,12 +3,18 @@
 namespace Ben\DoctorsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * RecepcionPago
  *
  * @ORM\Table(name="recepcion_pago")
  * @ORM\Entity(repositoryClass="Ben\DoctorsBundle\Entity\RecepcionPagoRepository")
+ * @Vich\Uploadable
+ * 
  */
 class RecepcionPago
 {
@@ -31,21 +37,21 @@ class RecepcionPago
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_firma", type="date")
+     * @ORM\Column(name="fecha_firma", type="date", nullable=true)
      */
     private $fechaFirma;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_recepcion_odc_contrato", type="date")
+     * @ORM\Column(name="fecha_recepcion_odc_contrato", type="date", nullable=true)
      */
     private $fechaRecepcionOdcContrato;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_acta", type="date")
+     * @ORM\Column(name="fecha_acta", type="date", nullable=true)
      */
     private $fechaActa;
 
@@ -59,14 +65,14 @@ class RecepcionPago
     /**
      * @var integer
      *
-     * @ORM\Column(name="numero_acta", type="integer", length=11)
+     * @ORM\Column(name="numero_acta", type="integer", length=11, nullable=true)
      *
      */
     private $numeroActa;
 
     /**
      * @ORM\ManyToOne(targetEntity="Ben\DoctorsBundle\Entity\PeriodoMes", inversedBy="recepcion_pagos")
-     * @ORM\JoinColumn(name="periodo_mes_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="periodo_mes_id", referencedColumnName="id", nullable=true)
      *   
      */
     protected $periodoMes;
@@ -88,7 +94,7 @@ class RecepcionPago
     /**
      * @var string
      *
-     * @ORM\Column(name="numero_factura", type="string", length=255)
+     * @ORM\Column(name="numero_factura", type="string", length=255, nullable=true)
      *
      */
     private $numeroFactura;
@@ -104,7 +110,7 @@ class RecepcionPago
     /**
      * @var integer
      *
-     * @ORM\Column(name="numero_quedan", type="integer", length=11)
+     * @ORM\Column(name="numero_quedan", type="integer", length=11, nullable=true)
      *
      */
     private $numeroQuedan;
@@ -112,7 +118,7 @@ class RecepcionPago
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_quedan", type="date")
+     * @ORM\Column(name="fecha_quedan", type="date", nullable=true)
      *
      */
     private $fechaQuedan;
@@ -120,14 +126,30 @@ class RecepcionPago
     /**
      * @var string
      *
-     * @ORM\Column(name="numero_referencia", type="string")
+     * @ORM\Column(name="numero_referencia", type="string", nullable=true)
      *
      */
     private $numeroReferencia;
-
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="integer", length=1, nullable=true)
+     *
+     */
+    private $estado;
+    /*
+        1  = tecnico
+        2  = neftali
+        3  = por aprobar lic trejo
+        4  = escanea y adjunta documentación
+        5  = se emite nota de envío.
+        10 = rechazado
+    */
+    
     /**
      * @ORM\ManyToOne(targetEntity="Ben\DoctorsBundle\Entity\TipoContratacion", inversedBy="recepcion_pagos")
-     * @ORM\JoinColumn(name="tipo_contratacion_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tipo_contratacion_id", referencedColumnName="id", nullable=true)
      *   
     */
     protected $tipoContratacion;
@@ -138,12 +160,53 @@ class RecepcionPago
      * @ORM\Column(name="comentarios", type="string", length=255, nullable=true)
      */
     private $comentarios;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Ben\DoctorsBundle\Entity\EstaAprobado", inversedBy="recepcion_pagos")
+     * @ORM\JoinColumn(name="esta_aprobado_id", referencedColumnName="id")
+     *   
+     */
+    private $estaAprobado;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Document", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     * @Assert\Type(type="Ben\DoctorsBundle\Entity\Document")
+     **/
+     
+    //private $archivo;
+    
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     * 
+     * @Vich\UploadableField(mapping="recepcion_pago_image", fileNameProperty="imageName", nullable=true)
+     * 
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string
+     */
+    private $imageName;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $updatedAt;
     
     /************ constructeur ************/
     
     public function __construct()
     {
+        //$this->proveedor = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->unidad = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->lineaTrabajo = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->periodo = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -523,5 +586,126 @@ class RecepcionPago
     public function getTipoContratacion()
     {
         return $this->tipoContratacion;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     * @return RecepcionPago
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set estaAprobado
+     *
+     * @param boolean $estaAprobado
+     * @return RecepcionPago
+     */
+    public function setEstaAprobado($estaAprobado)
+    {
+        $this->estaAprobado = $estaAprobado;
+
+        return $this;
+    }
+
+    /**
+     * Get estaAprobado
+     *
+     * @return boolean 
+     */
+    public function getEstaAprobado()
+    {
+        return $this->estaAprobado;
+    }
+    
+    /**
+     * Set archivo
+     *
+     * @param \Ben\DoctorsBundle\Entity\Document $archivo
+     * @return contratos
+     */
+    /*public function setArchivo(\Ben\DoctorsBundle\Entity\Document $archivo = null)
+    {
+        $this->archivo = $archivo;
+    
+        return $this;
+    }*/
+
+    /**
+     * Get archivo
+     *
+     * @return \Ben\DoctorsBundle\Entity\Document
+     */
+    /*public function getArchivo()
+    {
+        return $this->archivo;
+    }*/
+    
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
+     *
+     * @return Product
+     */
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+
+        if ($image instanceof UploadedFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param string $imageName
+     *
+     * @return Product
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
     }
 }

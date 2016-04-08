@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class LineaTrabajoType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -17,7 +17,8 @@ class LineaTrabajoType extends AbstractType
         $builder
             ->add('codigo')
             ->add('nombre')
-        ;
+            ->add('anio')
+            ->add('estado');
     }
     
     /**

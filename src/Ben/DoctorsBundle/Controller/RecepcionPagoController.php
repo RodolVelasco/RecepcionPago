@@ -8,9 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Ben\DoctorsBundle\Entity\RecepcionPago;
-use Ben\DoctorsBundle\Form\RecepcionPagoType;
+use Ben\DoctorsBundle\Form\RecepcionPago1Type;
+use Ben\DoctorsBundle\Form\RecepcionPago2Type;
+use Ben\DoctorsBundle\Form\RecepcionPago3Type;
+use Ben\DoctorsBundle\Entity\EstaAprobado;
 
 use Ben\DoctorsBundle\Pagination\Paginator;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * RecepcionPago controller.
@@ -18,7 +23,7 @@ use Ben\DoctorsBundle\Pagination\Paginator;
  */
 class RecepcionPagoController extends Controller
 {
-
+    private $editForm = array();
     /**
      * Lists all Person entities.
      * @Secure(roles="ROLE_USER")
@@ -29,24 +34,36 @@ class RecepcionPagoController extends Controller
         // var_dump($this);die;
         $em = $this->getDoctrine()->getManager();
         $entitiesLength = $em->getRepository('BenDoctorsBundle:RecepcionPago')->counter();
-        $cities = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getCities();
+        $periodos = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getPeriodos();
+        $periodomeses = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getPeriodoMeses();
+        $unidades = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getUnidades();
+        $tipoContrataciones = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getTipoContrataciones();
+        $proveedores = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getProveedores();
+        //$estaAprobados = $em->getRepository('BenDoctorsBundle:RecepcionPago')->getEstaAprobados();
 
         return $this->render('BenDoctorsBundle:RecepcionPago:index.html.twig', array(
-            'cities' => $cities,
+            'periodos' => $periodos,
+            'periodomeses' => $periodomeses,
+            'unidades' => $unidades,
+            'tipoContrataciones' => $tipoContrataciones,
+            'proveedores' => $proveedores,
             'entitiesLength' => $entitiesLength));
     }
 
     /**
-     * persons list using ajax
+     * RecepcionPago list using ajax
      * @Secure(roles="ROLE_USER")
      */
     public function ajaxListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $searchParam = $request->get('searchParam');
-        $entities = $em->getRepository('BenDoctorsBundle:Person')->search($searchParam);
+        $entities = $em->getRepository('BenDoctorsBundle:RecepcionPago')->search($searchParam);
+        
+        //exit(\Doctrine\Common\Util\Debug::dump($entities));
+        
         $pagination = (new Paginator())->setItems(count($entities), $searchParam['perPage'])->setPage($searchParam['page'])->toArray();
-        return $this->render('BenDoctorsBundle:Person:ajax_list.html.twig', array(
+        return $this->render('BenDoctorsBundle:RecepcionPago:ajax_list.html.twig', array(
                     'entities' => $entities,
                     'pagination' => $pagination,
                     ));
@@ -59,14 +76,17 @@ class RecepcionPagoController extends Controller
     {
 
         $entity = new RecepcionPago();
-        $form = $this->createForm(new RecepcionPagoType(), $entity);
+        $form = $this->createForm(new RecepcionPago1Type(), $entity);
         //exit(\Doctrine\Common\Util\Debug::dump("HOLA"));
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
 
-
-
         if ($form->isValid()) {
+            $entity->setEstado(3);
+            // Setear el estado a 'Sin estado'
+            $aprobadoEntity = $em->getRepository('BenDoctorsBundle:EstaAprobado')->find(1);
+            //exit(\Doctrine\Common\Util\Debug::dump($aprobadoEntity));
+            $entity->setEstaAprobado($aprobadoEntity);
             $em->persist($entity);
             $em->flush();
 
@@ -91,7 +111,7 @@ class RecepcionPagoController extends Controller
     public function newAction()
     {
         $entity = new RecepcionPago();
-        $form = $this->createForm(new RecepcionPagoType(), $entity);
+        $form = $this->createForm(new RecepcionPago1Type(), $entity);
         $em = $this->getDoctrine()->getManager();
         // $cities = $em->getRepository('BenDoctorsBundle:Person')->getCities();
 
@@ -111,15 +131,15 @@ class RecepcionPagoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BenDoctorsBundle:Person')->find($id);
+        $entity = $em->getRepository('BenDoctorsBundle:RecepcionPago')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Person entity.');
+            throw $this->createNotFoundException('Unable to find RecepcionPago entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('BenDoctorsBundle:Person:show.html.twig', array(
+        return $this->render('BenDoctorsBundle:RecepcionPago:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -134,20 +154,40 @@ class RecepcionPagoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BenDoctorsBundle:Person')->find($id);
-
+        $entity = $em->getRepository('BenDoctorsBundle:RecepcionPago')->find($id);
+        
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Person entity.');
+            throw $this->createNotFoundException('Unable to find RecepcionPago entity.');
         }
-        $editForm = $this->createForm(new PersonType(), $entity);
+        
+        /*$webpath="";
+        if($entity->getArchivo())
+        {
+            $webpath = $entity->getArchivo()->getWebPath();
+        }*/
+        
+        $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+        if($entity->getEstado() == 1)
+            $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+        if($entity->getEstado() == 2)
+            $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+            $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+        if($entity->getEstado() == 3)
+            $editForm = $this->createForm(new RecepcionPago2Type(), $entity);
+        if($entity->getEstado() == 4)
+            $editForm = $this->createForm(new RecepcionPago3Type(), $entity);
+        if($entity->getEstado() == 10 and $entity->getEstaAprobado() == 'Rechazado')
+            $editForm = $this->createForm(new RecepcionPago3Type(), $entity);
+        
+        
+        
         $deleteForm = $this->createDeleteForm($id);
-        // $cities = $em->getRepository('BenDoctorsBundle:Person')->getCities();
 
-        return $this->render('BenDoctorsBundle:Person:edit.html.twig', array(
+        return $this->render('BenDoctorsBundle:RecepcionPago:edit.html.twig', array(
             'entity'      => $entity,
             'form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            // 'cities' => $cities,
+            //'file_url' => $webpath,
         ));
     }
     /**
@@ -159,30 +199,55 @@ class RecepcionPagoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BenDoctorsBundle:Person')->find($id);
+        $entity = $em->getRepository('BenDoctorsBundle:RecepcionPago')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Person entity.');
+            throw $this->createNotFoundException('Unable to find RecepcionPago entity.');
         }
-
+        
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new PersonType(), $entity);
+        if($entity->getEstado() == 1)
+            $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+        if($entity->getEstado() == 2)
+            $editForm = $this->createForm(new RecepcionPago1Type(), $entity);
+        if($entity->getEstado() == 3)
+            $editForm = $this->createForm(new RecepcionPago2Type(), $entity);
+        if($entity->getEstado() == 4)
+            $editForm = $this->createForm(new RecepcionPago3Type(), $entity);
+        if($entity->getEstado() == 10)
+            $editForm = $this->createForm(new RecepcionPago3Type(), $entity);
+        
+        //$editForm = $this->createForm(new RecepcionPagoType, $entity);
         $editForm->handleRequest($request);
-
         if ($editForm->isValid()) {
+            $data = $editForm->getData();
+            //exit(\Doctrine\Common\Util\Debug::dump($data->getEstaAprobado()->getNombre()));
+            //exit(\Doctrine\Common\Util\Debug::dump($editForm->get('imageFile')));
+            if($editForm->get('estado')->getData() == 1)// VER SI TODOS LOS CAMPOS ESTAN LLENOS
+                $entity->setEstado(3);
+            if($editForm->get('estado')->getData() == 2)
+                $entity->setEstado(3);
+            if($editForm->get('estado')->getData() == 3 AND $data->getEstaAprobado()->getNombre() == 'Sin estado')
+                $entity->setEstado(3);
+            if($editForm->get('estado')->getData() == 3 AND $data->getEstaAprobado()->getNombre() == 'Aprobado')
+                $entity->setEstado(4);
+            if($editForm->get('estado')->getData() == 3 AND $data->getEstaAprobado()->getNombre() == 'Rechazado')
+                $entity->setEstado(10);
+            
+            /*if($editForm->get('estado')->getData() == 4 AND $data->getEstaAprobado()->getNombre() == 'Aprobado' AND
+               $editForm->get('imageFile_delete')->getData() != true AND $editForm->get('imageFile')->getData != "")
+                $entity->setEstado(10);*/
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('info', "L'étudiant a été mis à jour avec succès.");
-            return $this->redirect($this->generateUrl('person_edit', array('id' => $id)));
+            $this->get('session')->getFlashBag()->add('info', "La recepción de acta y pago fue editada exitosamente.");
+            return $this->redirect($this->generateUrl('recepcion_pago_edit', array('id' => $id)));
         }
-        // $cities = $em->getRepository('BenDoctorsBundle:Person')->getCities();
-
-        $this->get('session')->getFlashBag()->add('danger', "Il y a des erreurs dans le formulaire soumis !");
-        return $this->render('BenDoctorsBundle:Person:edit.html.twig', array(
+        
+        $this->get('session')->getFlashBag()->add('danger', "Hay errores en el formulario enviado !");
+        return $this->render('BenDoctorsBundle:RecepcionPago:edit.html.twig', array(
             'entity'      => $entity,
             'form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            // 'cities' => $cities,
         ));
     }
     /**
@@ -197,18 +262,18 @@ class RecepcionPagoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('BenDoctorsBundle:Person')->find($id);
+            $entity = $em->getRepository('BenDoctorsBundle:RecepcionPago')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Person entity.');
+                throw $this->createNotFoundException('Unable to find RecepcionPago entity.');
             }
 
             $em->remove($entity);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('info', "Action effectué avec succès !");
+            $this->get('session')->getFlashBag()->add('info', "El acta de recepción y pago ha sido eliminado exitosamente !");
         }
 
-        return $this->redirect($this->generateUrl('person'));
+        return $this->redirect($this->generateUrl('recepcion_pago'));
     }
 
     /**
@@ -234,10 +299,101 @@ class RecepcionPagoController extends Controller
     {
         $ids = $request->get('entities');
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('BenDoctorsBundle:Person')->search(array('ids'=>$ids));
+        $entities = $em->getRepository('BenDoctorsBundle:RecepcionPago')->search(array('ids'=>$ids));
         foreach( $entities as $entity) $em->remove($entity);
         $em->flush();
 
         return new Response('1');
+    }
+    
+    /**
+     * Deletes multiple entities
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function lineaTrabajoAction(Request $request)
+    {
+        $unidad_id = $request->get('unidad_id');
+     
+        $em = $this->getDoctrine()->getManager();
+        $lineaTrabajos = $em->getRepository('BenDoctorsBundle:LineaTrabajo')->findByUnidadId($unidad_id);
+        //exit(\Doctrine\Common\Util\Debug::dump("HOLA"));
+        /*$lineaTrabajos = array(
+                            'number' => array('1','2','3'),
+                            'alfabeth' => array('a','b','c'),
+                            'alfa' => array('$','&','#'));}*/
+        return new JsonResponse($lineaTrabajos);
+    }
+    
+    public function aprobarAction(Request $request, $users)
+    {
+        //exit(\Doctrine\Common\Util\Debug::dump(array("APROBAR",$users)));
+        $em = $this->getDoctrine()->getManager();
+        $security = $this->container->get('security.context');
+        if(!$security->isGranted('ROLE_MANAGER'))
+            $ids = array($security->getToken()->getUser()->getId());
+        elseif($users !== 'nothing')$ids = explode(',', $users);
+        else $ids = null;
+        
+        $entities = $em->getRepository('BenDoctorsBundle:RecepcionPago')->search(array('ids'=>$ids));
+        
+        //exit(\Doctrine\Common\Util\Debug::dump(array("IDS",$ids)));
+        foreach ($entities as $entity){
+            // verificando si el estado es 3. Es decir si las RP están listas para ser APROBADAS.
+            if($entity->getEstado() == 3){
+                $entity->setEstado(4);
+                $entity->setEstaAprobado($em->getReference('BenDoctorsBundle:EstaAprobado', 2));
+                $em->persist($entity);
+            }
+        }
+        $em->flush();
+        
+        $this->get('session')->getFlashBag()->add('info', "Acta de recepción/pago aprobadas exitosamente.");
+        return $this->redirect($this->generateUrl('recepcion_pago'));
+    }
+    
+    public function generarNotaEnvioPdfAction(Request $request, $users)
+    {
+        //exit(\Doctrine\Common\Util\Debug::dump(array("NOTA ENVIO",$users)));
+        $em = $this->getDoctrine()->getManager();
+
+        $security = $this->container->get('security.context');
+        if(!$security->isGranted('ROLE_MANAGER'))
+            $ids = array($security->getToken()->getUser()->getId());
+        elseif($users !== 'nothing')$ids = explode(',', $users);
+        else $ids = null;
+        
+        $entities = $em->getRepository('BenDoctorsBundle:RecepcionPago')
+                       ->search(
+                            array('ids'=>$ids,'estadoDesdeNotaEnvio'=>4,'estaAprobadoDesdeNotaEnvio'=>'Aprobado o Rechazado')
+                        );
+        
+        //exit(\Doctrine\Common\Util\Debug::dump(count($entities)));
+        $unidad = '';
+        $lineaDeTrabajo = '';
+        foreach($entities as $entity){
+            $unidad = $entity->getUnidad();
+            $lineaTrabajo = $entity->getLineaTrabajo();
+            break;
+        }
+        
+        $now = (new \DateTime)->format('d-m-Y_H-i');
+        $pagina = 'BenDoctorsBundle:RecepcionPago:nota_envio.html.twig';
+        
+       /*return $this->render($pagina, array('entities'=>$entities,'unidad'=>$unidad,'lineaTrabajo'=>$lineaTrabajo));*/
+        
+        $html = $this->renderView($pagina, 
+                                  array(
+                                    'entities'      =>  $entities,
+                                    'unidad'        =>  $unidad,
+                                    'lineaTrabajo'  =>  $lineaTrabajo
+                                ));
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="carte'.$now.'.pdf"'
+            )
+        );
     }
 }

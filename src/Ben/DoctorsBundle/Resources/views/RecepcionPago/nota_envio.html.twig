@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Nota envío</title>
+    {# {% set addr = 'http://' ~ app.request.server.get('SERVER_ADDR') %} #} 
+    {% set addr = 'http://mws-rodolvelasco.c9users.io' %}
+    <link rel="stylesheet" type="text/css" href="{{ bootstrapCss }}">
+    {# <link rel="stylesheet" type="text/css" href="{{ layoutCss }}"> #}
+    <link rel="stylesheet" type="text/css" href="{{ mainCss }}">
+    <style type="text/css"> 
+    .mybadge {
+      background: #000000;
+      color: #FFFFFF;
+      }
+      .mybadge .footer{ 
+        color: red;
+        background: yelow;
+      }
+    </style>
+</head>
+<body>
+<header class="print-header">
+  <div align="center"><img class="img-responsive" src="{{ pathToWeb ~ asset('/uploads/img/bg_daci.png') }}" alt="logo"/></div>
+  {# <h4>{{ asset('css/main.css', absolute=true) }}</h4> #}
+  {# <h4>{{ pathToWeb }}/uploads/img/bg_daci.png</h4> #}
+  {# <h4>{{ addr ~ asset('uploads/img/bg_daci.png') }}</h4> #}
+  {# <h4>http://mws-rodolvelasco.c9users.io/RecepcionPago/web/uploads/img/bg_daci.png</h4> #}
+  <p align="center">San Salvador, {{ 'now'|date('d') }} de {{ 'now'|date('M') }} de {{ 'now'|date('Y') }}</p>
+  <div class="clearfix"></div>
+</header>
+
+  {# <h3><span class="glyphicon glyphicon-user"></span>Título</h3> #}
+  <h3></h3>
+  <table class="table table-striped table-bordered">
+    <tr>
+      <td>
+        SEÑORES:
+      </td>
+      <td>
+        {{ unidad }}/{{ lineaTrabajo }}
+      </td>
+    </tr>
+  </table>
+  <br>
+  <p>
+     Es un gusto saludarles y al mismo tiempo enviarles los siguientes documentos que
+     contienen actas de recepción, los cuales han sido verificados por esta unidad y 
+     que le detallo a continuación:
+  </p>
+  <div>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>No. de Acta</th>
+          <th>Proveedor</th>
+          <th>Comentario</th>
+        </tr>
+      </thead>
+      <tbody id="dataContainer">
+      {% for entity in entities %}
+        <tr>
+          <td>{{ entity.numeroActa }}</td>
+          <td>{{ entity.proveedor.razonSocial }}</td>
+          <td>{{ entity.comentarios }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+  </div>
+  <h1></h1>
+  <div class="pull-left">
+      Por su fina atención, gracias.
+  </div>
+  <br/><br/>
+  <div class="pull-left">
+      Atentamente,
+  </div>
+  <br/><br/>
+  <div class="pull-left">
+      Ricardo Trejo<br/>
+      Administrador de Contratos<br/>
+      Presidencia de la República
+  </div>
+</body>
+</html>

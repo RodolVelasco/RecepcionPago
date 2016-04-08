@@ -1,16 +1,17 @@
 {% for entity in entities %}
-    <tr>
+    <tr {% if entity.estado == 1 %}class="warning"{% else %}{% if entity.estado == 10 %}class="danger"{% else %}{% if entity.estado == 4 and entity.imageName != null %}class="info"{% endif %}{% endif %}{% endif %}>
         <td class="hidden-print"><input type="checkbox" name="entities[]" value="{{ entity.id }}"></td>
-        <td>{{ entity.familyname }}</td>
-        <td>{{ entity.firstname }}</td>
-        <td>{{ entity.cin }}</td>
-        <td>{{ entity.cne }}</td>
-        <td>{{ entity.city }}</td>
-        <td>{% if entity.birthday %}{{ entity.birthday|date('d/m/Y') }}{% endif %}</td>
+        <td>{{ entity.id }}</td>
+        <td>{{ entity.proveedor.razonSocial }}</td>
+        <td>{{ entity.unidad.nombre }}</td>
+        <td>{{ entity.lineaTrabajo.nombre }}</td>
+        <td>{{ entity.periodo.periodo }}</td>
+        <td>{{ entity.valorFactura }}</td>
+        <td>{% if entity.tipoContratacion is null %} - {% else %}{{ entity.tipoContratacion.nombre }}{% endif %}</td>
         <td class="hidden-print">
             <div class="text-center">
-                <a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="afficher" href="{{ path('person_show', { 'id': entity.id }) }}"><span class="glyphicon glyphicon-search"></span></a>
-                <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="modifier" href="{{ path('person_edit', { 'id': entity.id }) }}"><span class="glyphicon glyphicon-edit"></span></a>
+                <a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="ver" href="{{ path('recepcion_pago_show', { 'id': entity.id }) }}"><span class="glyphicon glyphicon-search"></span></a>
+                <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="modificar" href="{{ path('recepcion_pago_edit', { 'id': entity.id }) }}"><span class="glyphicon glyphicon-edit"></span></a>
             </div>
         </td>
     </tr>
@@ -19,7 +20,7 @@
         <td colspan="10">
             <div id="msgbox" class="alert alert-danger fade in" role="alert"> 
                 <button type="button" class="close" data-dismiss="alert">×</button>
-                <strong>info !</strong> aucun résultat ne correspond à vos critères
+                <strong>info !</strong> No se encontraron recepciones con los criterios establecidos
             </div>
         </td>
     </tr>

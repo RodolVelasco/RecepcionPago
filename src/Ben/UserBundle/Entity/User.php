@@ -88,7 +88,7 @@ class User extends BaseUser{
      */
     public function getFullName()
     {
-        return $this->family_name.' '.$this->first_name;
+        return $this->first_name.' '.$this->family_name;
     }
 
     /**
@@ -254,9 +254,9 @@ class User extends BaseUser{
      */
     public function getRole()
     {
-        if(in_array('ROLE_ADMIN', $this->roles)) $role = 'Administrateur';
-        else if(in_array('ROLE_MANAGER', $this->roles)) $role = 'Manager';
-        else $role = 'utilisateur';
+        if(in_array('ROLE_ADMIN', $this->roles)) $role = 'Administrador';
+        else if(in_array('ROLE_MANAGER', $this->roles)) $role = 'Supervisor';
+        else $role = 'Técnico';
         return $role;
     }
 

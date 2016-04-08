@@ -28,6 +28,10 @@ ben_doctors_config:
 ben_doctors_recepcion_pago:
     resource: "@BenDoctorsBundle/Resources/config/routing/recepcion_pago.yml"
     prefix:   /recepcion_pago
+    
+ben_doctors_recepcion_tecnico:
+    resource: "@BenDoctorsBundle/Resources/config/routing/recepcion_tecnico.yml"
+    prefix:   /recepcion_tecnico
 
 ben_doctors_proveedor:
     resource: "@BenDoctorsBundle/Resources/config/routing/proveedor.yml"

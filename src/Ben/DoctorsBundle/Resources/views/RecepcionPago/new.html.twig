@@ -33,34 +33,12 @@ Tableau de bord | {{ parent() }}
         $('.has-datepicker').attr('data-date-format', 'YYYY-MM-DD').parent().datetimepicker({
           pickTime: false
         });
-
-        cityData = $.map(cityData, function(val,index){return {id:val, text:val};});
-        $('#ben_person_city').removeClass('form-control').select2({
-          createSearchChoice:function(term, data) { if ($(data).filter(function() { return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};} },
-          multiple: false,
-          data: cityData
+        
+        $('#ben_recepcion_pago_fechaFirma').datetimepicker({
+          defaultDate: new Date()
         });
+        
         $('select').removeClass('form-control').select2({minimumResultsForSearch: -1});
-
-        /* handicap */
-        var ishandicap = $('#ben_person_ishandicap'),
-            handicap = ishandicap.closest('.form-group').next().hide();
-            needs = handicap.closest('.form-group').next().hide();
-
-        if(ishandicap.is(":checked")){
-            handicap.show();
-            needs.show();
-        }
-        ishandicap.on('change', function(){
-          if(ishandicap.is(":checked")){
-            handicap.show();
-            needs.show();
-          }
-          else {
-            handicap.hide();
-            needs.hide();
-          }
-        });
 
         // $('select').removeClass('form-control').select2(); AFECTA TODOS LOS CAMPOS
 
@@ -68,13 +46,52 @@ Tableau de bord | {{ parent() }}
         $('#ben_recepcion_pago_lineaTrabajo').removeClass('form-control').select2();
         $('#ben_recepcion_pago_proveedor').removeClass('form-control').select2();
         
-
-        universityData = $.map(universityData, function(val,index){return {id:val, text:val};});
-        $('#ben_person_university').removeClass('form-control').select2({
-          createSearchChoice:function(term, data) { if ($(data).filter(function() { return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};} },
-          multiple: false,
-          data: universityData
-        });
+        $("#ben_recepcion_pago_unidad").change(function(){
+          var data = {
+              unidad_id: $(this).val()
+          };
+       
+          $.ajax({
+              type: 'post',
+              url: '{{ path("select_linea_trabajos") }}',
+              data: data,
+              success: function(data) {
+                  var $linea_trabajo_selector = $('#ben_recepcion_pago_lineaTrabajo');
+                  
+                  $linea_trabajo_selector.html('<option></option>');
+                  
+                  //alert('=>' + data.length);
+                  
+                  //alert('=>' + data);
+                  //console.dir(data);
+                  
+                  if(data.length == 0){
+                    
+                    $('#ben_recepcion_pago_lineaTrabajo').select2({
+                      placeholder: "No se encontraron elementos"
+                    });
+                    /*$linea_trabajo_selector
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="0">Sin resultados</option>')
+                        .val('');*/
+                  }else{
+                    $('#ben_recepcion_pago_lineaTrabajo').select2({
+                      placeholder: ""
+                    });
+                  }
+                  
+                  for (var i=0, total = data.length; i < total; i++) {
+                    //alert('=>' + data[i].Id);
+                    $linea_trabajo_selector.append('<option value="' + data[i].id + '">' + data[i].codigo + " - " + data[i].nombre + '</option>');
+                  }
+                  /*$.each(data, function(key, element) {
+                      alert('key: ' + key + '\n' + 'value: ' + element.id);
+                  });*/
+              }
+          });
+      });
 
     })(jQuery);
 </script>

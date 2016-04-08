@@ -1,76 +1,60 @@
 {% extends "BenDoctorsBundle::layout.html.twig" %}
 {% block title %}
-Tableau de bord | {{ parent() }}
-{% endblock %}
-{% block stylesheet %}
-    {{ parent() }}
-    <link href="{{ asset('bootstrap/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+Unidad | {{ parent() }}
 {% endblock %}
 {% block body %}
-<div class="col-md-12">
-    <h3><span class="glyphicon glyphicon-tower"></span> Registro de unidad</h3>
+<h3><span class="glyphicon glyphicon-tag"></span> Unidad presupuestaria</h3>
+<form action="{{ path('unidad_create') }}" class="form-horizontal col-md-8" method="post" {{ form_enctype(form) }}>
 
-<form action="{{ path('unidad_create') }}"  class="form-horizontal col-md-8" method="post">
+  {% include "BenDoctorsBundle:Unidad:form.html.twig" %}
 
-    {% include "BenDoctorsBundle:Unidad:form.html.twig" %}
-
-    <div class="form-group">
-      <div class="col-sm-offset-6 col-sm-6">
-        <button type="submit" name="subvalider" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Agregar</button>
-      </div>
+  <div class="form-group">
+    <div class="col-md-offset-6 col-md-6">
+      <button type="button" id="add-another-item" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button>
+      <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Agregar</button>
     </div>
+  </div>
 </form>
-</div>
-{% endblock %}
+
+{% endblock body %}
 {% block javascripts %}
 {{ parent() }}
-
-    <script src="{{ asset('js/moment.js') }}"></script>
-    <script src="{{ asset('bootstrap/js/bootstrap-datetimepicker.js') }}"></script> 
 <script> 
     (function($) {
+        
+        var itemCount = '{{ form.lineatrabajos|length }}',
+            datacontainer = $('#ben_unidad_lineatrabajos'),
+            prototype = datacontainer.attr('data-prototype');
+            
+        datacontainer.find('label').removeClass('col-md-6').addClass('col-md-4');
 
-        $('.has-datepicker').attr('data-date-format', 'YYYY-MM-DD').parent().datetimepicker({
-          pickTime: false
+        $('#add-another-item').on('click', function() {
+            newWidget = prototype.replace(/__name__/g, itemCount++);
+            item = $(newWidget);
+            item.find('label').removeClass('col-md-6').addClass('col-md-4');
+            item.appendTo(datacontainer);
+            addTagFormDeleteLink(item);
+        $('select').removeClass('form-control').select2();
+
+            return false;
         });
 
-        cityData = $.map(cityData, function(val,index){return {id:val, text:val};});
-        $('#ben_unidad_city').removeClass('form-control').select2({
-          createSearchChoice:function(term, data) { if ($(data).filter(function() { return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};} },
-          multiple: false,
-          data: cityData
+        datacontainer.children('.form-group').each(function() {
+            addTagFormDeleteLink($(this));
         });
-        $('select').removeClass('form-control').select2({minimumResultsForSearch: -1});
 
-        /* handicap */
-        var ishandicap = $('#ben_unidad_ishandicap'),
-            handicap = ishandicap.closest('.form-group').next().hide();
-            needs = handicap.closest('.form-group').next().hide();
-
-        if(ishandicap.is(":checked")){
-            handicap.show();
-            needs.show();
+        function addTagFormDeleteLink(tagFormLi) {
+            var removeFormA = $('<a class="js-remove" href="#">x</a>');
+            tagFormLi.append(removeFormA);
         }
-        ishandicap.on('change', function(){
-          if(ishandicap.is(":checked")){
-            handicap.show();
-            needs.show();
-          }
-          else {
-            handicap.hide();
-            needs.hide();
-          }
+
+        datacontainer.on('click', '.js-remove', function(e) {
+            e.preventDefault();
+            $(this).parent().remove();
         });
 
-        // $('select').removeClass('form-control').select2(); AFECTA TODOS LOS CAMPOS
-
-        universityData = $.map(universityData, function(val,index){return {id:val, text:val};});
-        $('#ben_unidad_university').removeClass('form-control').select2({
-          createSearchChoice:function(term, data) { if ($(data).filter(function() { return this.text.localeCompare(term)===0; }).length===0) {return {id:term, text:term};} },
-          multiple: false,
-          data: universityData
-        });
-
+        $('select').removeClass('form-control').select2();
+        
     })(jQuery);
 </script>
 {% endblock %}

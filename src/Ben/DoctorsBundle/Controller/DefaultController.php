@@ -13,8 +13,12 @@ class DefaultController extends Controller
      * @Secure(roles="ROLE_USER")
      */
     public function indexAction()
-    {       
-        return $this->render('BenDoctorsBundle:Default:index.html.twig');
+    {   
+        if ($this->get('security.context')->isGranted(['ROLE_ADMIN','ROLE_MANAGER'])){
+            return $this->render('BenDoctorsBundle:Default:index.html.twig');
+        }else{
+            return $this->redirect($this->generateUrl('recepcion_tecnico'));
+        }
     }
 
     /**

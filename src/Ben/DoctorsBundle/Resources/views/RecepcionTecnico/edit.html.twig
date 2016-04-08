@@ -1,0 +1,81 @@
+{% extends "BenDoctorsBundle::layout.html.twig" %}
+{% block title %}
+Tableau de bord | {{ parent() }}
+{% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="{{ asset('bootstrap/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<h3><span class="glyphicon glyphicon-list-alt block"></span> Edición de actas de recepción y pago</h3>
+<form action="{{ path('recepcion_tecnico_update', { 'id': entity.id }) }}"  class="form-horizontal col-md-8" method="post">
+    {% include "BenDoctorsBundle:RecepcionTecnico:form.html.twig" %}
+
+    <div class="form-group">
+      <div class="col-sm-offset-6 col-sm-6">
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Editar</button>
+        <a href="#" id="js-delete" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Eliminar</a>
+      </div>
+    </div>
+</form>
+<form id="deleteForm" action="{{ path('recepcion_tecnico_delete', { 'id': entity.id }) }}" method="POST" class="">
+    {{ form_widget(delete_form) }}
+</form> 
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+    <script src="{{ asset('js/moment.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap-datetimepicker.js') }}"></script> 
+<script> 
+    (function($) {
+        
+        $('.has-datepicker').attr('data-date-format', 'YYYY-MM-DD').parent().datetimepicker({
+          pickTime: false
+        });
+        
+        $('#js-delete').on('click', function(){
+            $('#deleteForm').submit();
+            return false;
+        });
+
+        $('select').removeClass('form-control').select2({minimumResultsForSearch: -1});
+
+        
+        
+        $("#ben_recepcion_tecnico_unidad").change(function(){
+          var data = {
+              unidad_id: $(this).val()
+          };
+       
+          $.ajax({
+              type: 'post',
+              url: '{{ path("select_linea_trabajos") }}',
+              data: data,
+              success: function(data) {
+                  var $linea_trabajo_selector = $('#ben_recepcion_tecnico_lineaTrabajo');
+                  
+                  $linea_trabajo_selector.html('<option></option>');
+                  
+                  if(data.length == 0){
+                    
+                    $('#ben_recepcion_tecnico_lineaTrabajo').select2({
+                      placeholder: "No se encontraron elementos"
+                    });
+                  }else{
+                    $('#ben_recepcion_tecnico_lineaTrabajo').select2({
+                      placeholder: ""
+                    });
+                  }
+                  
+                  for (var i=0, total = data.length; i < total; i++) {
+                    $linea_trabajo_selector.append('<option value="' + data[i].id + '">' + data[i].codigo + " - " + data[i].nombre + '</option>');
+                  }
+              }
+          });
+      });
+        
+    })(jQuery);
+</script>
+{% endblock %}

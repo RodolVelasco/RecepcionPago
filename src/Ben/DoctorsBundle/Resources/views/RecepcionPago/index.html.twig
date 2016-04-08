@@ -2,17 +2,21 @@
 {% block title %}
 Tableau de bord | {{ parent() }}
 {% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="{{ asset('bootstrap/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
 {% block body %}
 <h3><span class="glyphicon glyphicon-list-alt"></span> Listado de actas de recepción y pago</h3>
 <form  id="jsForm" role="form" method="post" action="">
-        <input id="pagenumber" type="hidden" name="searchParam[page]" value="1"> 
-        <input id="sortBy" type="hidden" name="searchParam[sortBy]" value="all"> 
-        <input id="sortDir" type="hidden" name="searchParam[sortDir]" value="ASC"> 
+        <input id="pagenumber" type="hidden" name="searchParam[page]" value="1">
+        <input id="sortBy" type="hidden" name="searchParam[sortBy]" value="all">
+        <input id="sortDir" type="hidden" name="searchParam[sortDir]" value="DESC">
 
         <div class="row hidden-print">
           <div class="col-md-5 form-group">
             <div class="input-group">
-              <input type="text" name="searchParam[keyword]" class="form-control" placeholder="Search">
+              <input type="text" name="searchParam[keyword]" class="form-control" placeholder="Buscar">
               <div class="input-group-btn">
               <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
               </div><!-- /btn-group -->
@@ -27,32 +31,35 @@ Tableau de bord | {{ parent() }}
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-search"></span> Búsqueda avanzada</a></li>
                 <li><a href="{{ path('recepcion_pago_new') }}"><span class="glyphicon glyphicon-plus"></span> Agregar</a></li>
+                <li><a href="#" id="js-aprobar"><span class="glyphicon glyphicon-check"></span> Aprobar</a></li>
+                <li><a href="#" id="js-generar"><span class="glyphicon glyphicon-file"></span> Generar nota de envío</a></li>
                 <li><a href="#" id="js-delete"><span class="glyphicon glyphicon-trash"></span> Borrar</a></li>
               </ul>
             </div>
           </div>
         </div><!-- /.row --> 
         
-        {# 
+        
         <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
                 <th class="hidden-print"><input id="checkall" type="checkbox" value=""></th>
-                <th class="sortable"><a href="#" class="js-sort" data-order="familyname">Apellido<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
-                <th class="sortable"><a href="#" class="js-sort" data-order="firstname">Nombre<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
-                <th>NIT</th>
-                <th>DUI</th>
-                <th>Departamento</th>
-                <th class="sortable"><a href="#" class="js-sort" data-order="birthday">Fecha de nacimiento<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th class="sortable" style="min-width:50px"><a href="#" class="js-sort" data-order="id">Id<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th class="sortable"><a href="#" class="js-sort" data-order="proveedor">Proveedor<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th class="sortable"><a href="#" class="js-sort" data-order="unidad">Unidad<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
+                <th>Línea de trabajo</th>
+                <th>Periodo</th>
+                <th>Valor factura</th>
+                <th class="sortable"><a href="#" class="js-sort" data-order="tipocontratacion">Tipo contratación<span class="glyphicon glyphicon-sort pull-right"></span></a></th>
                 <th class="hidden-print">Acciones</th>
             </tr>
             </thead>
             <tbody id="dataContainer"></tbody>
         </table>
-        #}
+        
 
         <div class="caption">
-          <strong>Total:</strong> <em>{{ entitiesLength }} Estudiantes</em>
+          <strong>Total:</strong> <em>{{ entitiesLength }} Recepciones</em>
         </div>
     <!-- Modal advanced search -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
@@ -64,32 +71,128 @@ Tableau de bord | {{ parent() }}
       </div>
       <div class="modal-body form-horizontal">
           <div class="form-group">
-            <label for="" class="col-sm-5 control-label">NIT</label>
+            <label for="" class="col-sm-5 control-label">Número de referencia</label>
             <div class="col-sm-6">
-              <input type="text" name="searchParam[cin]" class="form-control">
+              <input type="text" name="searchParam[numeroReferenciaInferior]" class="form-control">
+              <div style="padding-top: 5px;"></div>
+              <input type="text" name="searchParam[numeroReferenciaSuperior]" class="form-control">
             </div>
           </div>
           <div class="form-group">
-            <label for="" class="col-sm-5 control-label">Sexo</label>
+            <label for="" class="col-sm-5 control-label">Número de acta</label>
             <div class="col-sm-6">
-              <select id="genderselect" name="searchParam[gender]" class="select2 no-search">
+              <input type="text" name="searchParam[numeroActaInferior]" class="form-control">
+              <div style="padding-top: 5px;"></div>
+              <input type="text" name="searchParam[numeroActaSuperior]" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Periodo</label>
+            <div class="col-sm-6">
+              <select id="periodoselect" name="searchParam[periodo]" class="select2 no-search">
                 <option value="">Todos</option>
-                <option value="Masculin">Masculino</option>
-                <option value="Féminin">Femenino</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="" class="col-sm-5 control-label">Ciudad</label>
-            <div class="col-sm-6">
-              <select id="cityselect" name="searchParam[city]" class="select2 search">
-                <option value="">Todas</option>
-                {% for item in cities %}
+                {% for item in periodos %}
                   <option value="{{ item.label }}">{{ item.label }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Periodo/Mes</label>
+            <div class="col-sm-6">
+              <select id="periodoFechaselect" name="searchParam[periodoMes]" class="select2 no-search">
+                <option value="0">Todos</option>
+                {% for item in periodomeses %}
+                  <option value="{{ item.label }}">{{ item.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Proveedor</label>
+            <div class="col-sm-6">
+            <select id="proveedorSelect" name="searchParam[proveedorAdvanced]" class="select2">
+                <option value="">Todos</option>
+                {% for item in proveedores %}
+                  <option value="{{ item.id }}">{{ item.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Unidad</label>
+            <div class="col-sm-6">
+            <select id="unidadSelect" name="searchParam[unidad]" class="select2">
+                <option value="">Todos</option>
+                {% for item in unidades %}
+                  <option value="{{ item.id }}">{{ item.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Línea de trabajo</label>
+            <div class="col-sm-6">
+              <select id="lineaTrabajoSelect" name="searchParam[lineaTrabajo]" class="select2">
+                <option value="">Todos</option>
+                {# {% for item in lineaTrabajos %} <option value="{{ item.id }}">{{ item.label }}</option> {% endfor %} #}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Valor de factura</label>
+            <div class="col-sm-6">
+              <input type="text" name="searchParam[valorFacturaInferior]" class="form-control">
+              <div style="padding-top: 5px;"></div>
+              <input type="text" name="searchParam[valorFacturaSuperior]" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Fecha recepción ODC</label>
+            <div class="col-sm-6">
+              <input type="text" name="searchParam[fechaRecepcionOdcInferior]" class="form-control has-datepicker">
+              <div style="padding-top: 5px;"></div>
+              <input type="text" name="searchParam[fechaRecepcionOdcSuperior]" class="form-control has-datepicker">
+            </div>
+          </div>
+         {#
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Fecha del acta</label>
+            <div class="col-sm-6">
+              <input type="text" name="searchParam[fechaRecepcionActaInferior]" class="form-control has-datepicker">
+              <div style="padding-top: 5px;"></div>
+              <input type="text" name="searchParam[fechaRecepcionActaSuperior]" class="form-control has-datepicker">
+            </div>
+          </div>
+          #}
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Tipo contratación</label>
+            <div class="col-sm-6">
+              <select id="tipoContratacionSelect" name="searchParam[tipoContratacion]" class="select2 no-search">
+                <option value="">Todos</option>
+                {% for item in tipoContrataciones %}
+                  <option value="{{ item.id }}">{{ item.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="col-sm-5 control-label">Estado</label>
+            <div class="col-sm-6">
+              <select id="estadoSelect" name="searchParam[estado]" class="select2 no-search">
+                <option value="">Todos</option>
+                <option value="1">Registrados por técnicos</option>
+                <option value="2">Registrados por Daci</option>
+                <option value="3">Listos para aprobar</option>
+                <option value="12">Aprobados sin documento escaneado</option>
+                <option value="4">Finalizados</option>
+                <option value="10">Rechazados</option>
+                <option value="11">Finalizados y Rechazados</option>
+                {# {% for item in estaAprobados %}<option value="{{ item.id }}">{{ item.label }}</option>{% endfor %} #}
+              </select>
+            </div>
+          </div>
+          {# <div class="form-group"><label for="" class="col-sm-5 control-label">Ciudad</label><div class="col-sm-6"><select id="cityselect" name="searchParam[city]" class="select2 search"><option value="">Todas</option>{% for item in cities %}<option value="{{ item.label }}">{{ item.label }}</option>{% endfor %}</select></div></div> #}
           <div class="form-group">
             <label for="" class="col-sm-5 control-label">Líneas por página</label>
             <div class="col-sm-6">
@@ -112,9 +215,52 @@ Tableau de bord | {{ parent() }}
 {% endblock body %}
 {% block javascripts %}
 {{ parent() }}
+
+    <script src="{{ asset('js/moment.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap-datetimepicker.js') }}"></script> 
 <script> 
     (function($) {
-
+      $('.has-datepicker').attr('data-date-format', 'YYYY-MM-DD').datetimepicker({
+          pickTime: false
+        });
+      
+      $('#unidadSelect').removeClass('form-control').select2();
+      $('#lineaTrabajoSelect').removeClass('form-control').select2();
+      $('#proveedorSelect').removeClass('form-control').select2();
+      
+      $("#unidadSelect").change(function(){
+          var data = {
+              unidad_id: $(this).val()
+          };
+       
+          $.ajax({
+              type: 'post',
+              url: '{{ path("select_linea_trabajos") }}',
+              data: data,
+              success: function(data) {
+                  var $linea_trabajo_selector = $('#lineaTrabajoSelect');
+                  
+                  $linea_trabajo_selector.html('<option></option>');
+                  
+                  if(data.length == 0){
+                    $('#lineaTrabajoSelect').select2({
+                      placeholder: "No se encontraron elementos"
+                    });
+                  }else{
+                    $('#lineaTrabajoSelect').select2({
+                      placeholder: ""
+                    });
+                  }
+                  
+                  for (var i=0, total = data.length; i < total; i++) {
+                    //alert('=>' + data[i].Id);
+                    $linea_trabajo_selector.append('<option value="' + data[i].id + '">' + data[i].codigo + " - " + data[i].nombre + '</option>');
+                  }
+              }
+          });
+      });
+      
+      
       /* helper functions */
       function getCheckedRows () {
         var users = [];
@@ -125,7 +271,7 @@ Tableau de bord | {{ parent() }}
       }
       function isSelected () {
         if (!getCheckedRows()) {
-          alert('vous devez selectionner au moin un adhérant');
+          alert('Se debe seleccionar al menos una acta de recepción y pago');
           return false;
         };
         return true;
@@ -165,6 +311,8 @@ Tableau de bord | {{ parent() }}
           sortDirInput = form.find('#sortDir'),
           sortBtn = form.find('.js-sort'),
           searchModal = form.find('#searchModal'),
+          printAprobarBtn = form.find('#js-aprobar'),
+          printGenerarBtn = form.find('#js-generar'),
           jsFormUrl = '',
           checkboxBtn = form.find("input:checkbox");
 
@@ -173,6 +321,25 @@ Tableau de bord | {{ parent() }}
       form.on('click', '.js-page', function(){
           pageInput.val($(this).data('page'));
           ajaxPost();
+      });
+      
+      /* aprobar */    
+      printAprobarBtn.on('click', function(){
+        if (!isSelected() || !confirmation('¿Está seguro que desea aprobar la(s) acta(s) de recepción y pago seleccionada(s)?')) return false;
+        var url = '{{ path('recepcion_pago_aprobar', {'users': 1111 }) }}',
+            users = getCheckedRows();
+        users = (users==='')? 'nothing':users;
+        url = url.replace("1111", users);
+        window.location.href = url;
+      });
+      /* generar notas de envio */
+      printGenerarBtn.on('click', function(){
+        if (!isSelected() || !confirmation('¿Está seguro que desea generar notas de envío de la(s) acta(s) de recepción y pago seleccionada(s)?')) return false;
+        var url = '{{ path('recepcion_pago_generar', {'users': 1111 }) }}',
+            users = getCheckedRows();
+        users = (users==='')? 'nothing':users; 
+        url = url.replace("1111", users);
+        window.location.href = url;
       });
 
       /* change sort order */
@@ -188,8 +355,8 @@ Tableau de bord | {{ parent() }}
 
       /* delete a user */
       deleteBtn.on('click', function(){
-        if (!isSelected() || !confirmation('voullez-vous vraiment supprimer les adhérants séléctionnées')) return false;
-        jsFormUrl='{{ path('person_remove') }}';
+        if (!isSelected() || !confirmation('¿Está seguro que realmente quiere eliminar la(s) acta(s) de recepción y pago seleccionada(s)?')) return false;
+        jsFormUrl='{{ path('recepcion_pago_remove') }}';
         ajaxPost('delete');
       });
       form.on('submit', ajaxPost);

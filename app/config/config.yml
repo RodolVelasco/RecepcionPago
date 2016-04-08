@@ -31,8 +31,15 @@ twig:
     form:
         resources:
             - 'BenDoctorsBundle:Form:fields.html.twig'
+            - 'VichUploaderBundle:Form:fields.html.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        pathToWeb: "%kernel.root_dir%/../web"
+        bootstrapCss: "/home/ubuntu/workspace/RecepcionPago/web/bootstrap/css/bootstrap.css"
+        mainCss: "/home/ubuntu/workspace/RecepcionPago/web/css/main.css"
+        layoutCss: "/home/ubuntu/workspace/RecepcionPago/web/css/layout.css"
+    
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
@@ -74,3 +81,26 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+#vich uploader configuration
+vich_uploader:
+    db_driver: orm
+    storage: file_system
+    twig: true
+    
+    mappings:
+        recepcion_pago_image:
+            uri_prefix:         /RecepcionPago/web/uploads/recepcion_pago
+            upload_destination: %kernel.root_dir%/../web/uploads/recepcion_pago
+            namer:              vich_uploader.namer_origname
+            
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
+
+#knp_snappy pdf bundle
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /home/ubuntu/workspace/wkhtmltox/bin/wkhtmltopdf
+        options:    []

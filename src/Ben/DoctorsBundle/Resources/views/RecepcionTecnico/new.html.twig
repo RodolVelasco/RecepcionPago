@@ -1,0 +1,94 @@
+{% extends "BenDoctorsBundle::layout.html.twig" %}
+{% block title %}
+Tableau de bord | {{ parent() }}
+{% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="{{ asset('bootstrap/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div class="col-md-12">
+    <h3><span class="glyphicon glyphicon-list-alt"></span> Registro de acta de recepción y pago</h3>
+
+<form action="{{ path('recepcion_tecnico_new') }}"  class="form-horizontal col-md-2" method="post">
+
+    {# {% include "BenDoctorsBundle:RecepcionTecnico:form.html.twig" %} #}
+    {{ form_widget(form) }}
+    <div class="form-group">
+      <div class="col-sm-offset-6 col-sm-6">
+        <button type="submit" name="subvalider" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Agregar</button>
+      </div>
+    </div>
+</form>
+</div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+    <script src="{{ asset('js/moment.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap-datetimepicker.js') }}"></script> 
+<script> 
+    (function($) {
+
+        $('.has-datepicker').attr('data-date-format', 'YYYY-MM-DD').parent().datetimepicker({
+          pickTime: false
+        });
+        
+        $('select').removeClass('form-control').select2({minimumResultsForSearch: -1});
+
+        // $('select').removeClass('form-control').select2(); AFECTA TODOS LOS CAMPOS
+
+        $('#ben_recepcion_pago_unidad').removeClass('form-control').select2();
+        $('#ben_recepcion_pago_lineaTrabajo').removeClass('form-control').select2();
+        $('#ben_recepcion_pago_proveedor').removeClass('form-control').select2();
+        
+        $("#ben_recepcion_pago_unidad").change(function(){
+          var data = {
+              unidad_id: $(this).val()
+          };
+       
+          $.ajax({
+              type: 'post',
+              url: '{{ path("select_linea_trabajos") }}',
+              data: data,
+              success: function(data) {
+                  var $linea_trabajo_selector = $('#ben_recepcion_pago_lineaTrabajo');
+       
+                  //$linea_trabajo_selector.html('<option>Línea de trabajo</option>');
+                  
+                  //alert('=>' + data.length);
+                  
+                  //alert('=>' + data);
+                  //console.dir(data);
+                  
+                  if(data.length == 0){
+                    $linea_trabajo_selector.html('<option></option>');
+                    $('#ben_recepcion_pago_lineaTrabajo').select2({
+                      placeholder: "No se encontraron elementos"
+                    });
+                    /*$linea_trabajo_selector
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="0">Sin resultados</option>')
+                        .val('');*/
+                  }else{
+                    $('#ben_recepcion_pago_lineaTrabajo').select2({
+                      placeholder: ""
+                    });
+                  }
+                  
+                  for (var i=0, total = data.length; i < total; i++) {
+                    //alert('=>' + data[i].Id);
+                    $linea_trabajo_selector.append('<option value="' + data[i].id + '">' + data[i].codigo + " - " + data[i].nombre + '</option>');
+                  }
+                  /*$.each(data, function(key, element) {
+                      alert('key: ' + key + '\n' + 'value: ' + element.id);
+                  });*/
+              }
+          });
+      });
+
+    })(jQuery);
+</script>
+{% endblock %}

@@ -46,4 +46,23 @@ class LineaTrabajoRepository extends EntityRepository
         $stmt->execute();
         return  $stmt->fetchAll();
     }
+    
+    public function findByUnidadId($unidad_id){
+        
+        /*
+        $qb = $this->createQueryBuilder('p');
+     	//exit(\Doctrine\Common\Util\Debug::dump($unidad_id));
+        if(!empty($unidad_id))
+            $qb->andWhere('p.unidad = :unidadId')
+                ->setParameter('unidadId', $unidad_id);
+        
+       //return $qb->getQuery();
+       */
+       $query = $this->getEntityManager()->createQuery("
+        SELECT lt FROM BenDoctorsBundle:LineaTrabajo lt 
+		WHERE lt.unidad = :unidadId
+        ")->setParameter('unidadId', $unidad_id);
+       
+       return $query->getArrayResult();
+    }
 }

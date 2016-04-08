@@ -1,6 +1,6 @@
 {% extends "BenUserBundle::layout.html.twig" %}
 {% block title %}
-Tableau de bord | {{ parent() }}
+Mostrar usuario | {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -10,16 +10,18 @@ Tableau de bord | {{ parent() }}
 	<div class="col-md-12">
     <div class="box">
       <header>
-          <h4><span class="glyphicon glyphicon-file"></span> Medecin</h4>
+          <h4><span class="glyphicon glyphicon-file"></span> Información de usuario</h4>
       </header>
         <ul class="list-group">
-          <li class="list-group-item"><strong>Nom :</strong> {{ entity.familyname }}</li>
-          <li class="list-group-item"><strong>Preom :</strong>  {{ entity.firstname }} </li>
-          <li class="list-group-item"><strong>Tél :</strong> {{ entity.tel }}</li>
-          <li class="list-group-item"><strong>Ajouté le :</strong> {% if entity.created %}{{ entity.created|date('d/m/Y') }}{% endif %}</li>
+          <li class="list-group-item"><strong>Apellido :</strong> {{ entity.familyname }}</li>
+          <li class="list-group-item"><strong>Nombre :</strong>  {{ entity.firstname }} </li>
+          <li class="list-group-item"><strong>Teléfono :</strong> {{ entity.tel }}</li>
+          <li class="list-group-item"><strong>Fecha de creación :</strong> {% if entity.created %}{{ entity.created|date('d/m/Y') }}{% endif %}</li>
         </ul>
     </div>
 	</div>
+	
+	{#
 	<div class="col-md-12">
 		
       <div class="box">
@@ -49,7 +51,7 @@ Tableau de bord | {{ parent() }}
             </tbody>
         </table>
     </div> 
-	</div>
+	</div>#}
 </div>
 
 {% endblock body %}

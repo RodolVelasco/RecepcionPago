@@ -30,6 +30,9 @@ function confirmation() {
     var msg='¿Está seguro que desea realizar esta acción?';
     return window.confirm(msg, 'Alert');
 }
+function confirmation(msg) {
+    return window.confirm(msg, 'Alert');
+}
 
 (function($) {
     /* menu config */

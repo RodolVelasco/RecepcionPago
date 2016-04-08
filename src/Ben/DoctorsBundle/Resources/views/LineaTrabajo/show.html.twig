@@ -16,6 +16,14 @@ Tableau de bord | {{ parent() }}
                 <th>Nombre</th>
                 <td>{{ entity.nombre }}</td>
             </tr>
+            <tr>
+                <th>Año</th>
+                <td>{{ entity.anio }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td> {% if entity.estado == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+            </tr>
         </tbody>
     </table>
 

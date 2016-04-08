@@ -38,3 +38,16 @@ recepcion_pago_remove:
     path:     /remove
     defaults: { _controller: "BenDoctorsBundle:RecepcionPago:remove" }
     requirements: { _method: post|delete }
+
+select_linea_trabajos:
+    path:     /linea_trabajos
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:lineaTrabajo" }
+    requirements: { _method: post }
+    
+recepcion_pago_aprobar:
+    pattern:     /aprobar/{users}
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:aprobar" }
+    
+recepcion_pago_generar:
+    pattern:  /generar/{users}
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:generarNotaEnvioPdf" }

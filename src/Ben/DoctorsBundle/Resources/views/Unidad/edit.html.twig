@@ -6,13 +6,13 @@ Unidad edit | {{ parent() }}
 
 <h3><span class="glyphicon glyphicon-tag"></span> Editar unidad</h3>
 
-<form action="{{ path('unidad_update', { 'id': entity.id }) }}" class="form-horizontal col-md-8" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('unidad_update', { 'id': entity.id }) }}" class="form-horizontal col-md-8" method="post">
     {% include "BenDoctorsBundle:Unidad:form.html.twig" %}
     <div class="form-group">
-      <div class="col-md-offset-5 col-md-7">
-        <button type="submit" name="subvalider" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Modificar</button>
+      <div class="col-sm-offset-6 col-sm-6">
+        <button type="button" id="add-another-item" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></button>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Editar</button>
         <a href="#" id="js-delete" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Eliminar</a>
-        <a href="{{ path('unidad') }}" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Retornar a ver la lista</a>
       </div>
     </div>
 </form>
@@ -25,11 +25,42 @@ Unidad edit | {{ parent() }}
 {{ parent() }}
 <script> 
     (function($) {
-
         $('#js-delete').on('click', function(){
             $('#deleteForm').submit();
             return false;
         });
+
+        var itemCount = '{{ form.lineatrabajos|length }}',
+            datacontainer = $('#ben_unidad_lineatrabajos'),
+            prototype = datacontainer.attr('data-prototype');
+
+        datacontainer.find('label').removeClass('col-md-6').addClass('col-md-4');
+
+        $('#add-another-item').on('click', function() {
+            newWidget = prototype.replace(/__name__/g, itemCount++);
+            item = $(newWidget);
+            item.find('label').removeClass('col-md-6').addClass('col-md-4');
+            item.appendTo(datacontainer);
+            addTagFormDeleteLink(item);
+            $('select').removeClass('form-control').select2();
+
+            return false;
+        });
+
+        datacontainer.children('.form-group').each(function() {
+            addTagFormDeleteLink($(this));
+        });
+
+        function addTagFormDeleteLink(tagFormLi) {
+            var removeFormA = $('<a class="js-remove" href="#">x</a>');
+            tagFormLi.append(removeFormA);
+        }
+
+        datacontainer.on('click', '.js-remove', function(e) {
+            e.preventDefault();
+            $(this).parent().remove();
+        });
+        $('select').removeClass('form-control').select2();
     })(jQuery);
 </script>
 {% endblock %}

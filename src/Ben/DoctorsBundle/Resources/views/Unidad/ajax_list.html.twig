@@ -3,6 +3,8 @@
         <td class="hidden-print"><input type="checkbox" name="entities[]" value="{{ entity.id }}"></td>
         <td style="min-width:90px">{{ entity.codigo }}</td>
         <td>{{ entity.nombre }}</td>
+        <td>{{ entity.anio.periodo }}</td>
+        <td>{{ entity.estado.nombre }}</td>
         <td class="hidden-print">
             <div class="text-center">
                 <a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="mostrar" href="{{ path('unidad_show', { 'id': entity.id }) }}"><span class="glyphicon glyphicon-search"></span></a>

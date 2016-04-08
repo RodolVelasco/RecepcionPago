@@ -1,9 +1,9 @@
 {% extends "BenUserBundle::layout.html.twig" %}
 {% block title %}
-Tableau de bord | {{ parent() }}
+Usuario | {{ parent() }}
 {% endblock %}
 {% block body %}
-<div class="col-md-12"><h3><span class=" glyphicon glyphicon-user"></span> Inscription d'un utilisateur</h3></div>
+<div class="col-md-12"><h3><span class=" glyphicon glyphicon-user"></span> Registro de usuario</h3></div>
 <form class="form-horizontal col-md-8" action="{{ path('ben_add_user')}}" method="POST" role="form"  {{ form_enctype(form) }}>
 	
 {% include "BenUserBundle:admin:form.html.twig" %}
@@ -11,7 +11,7 @@ Tableau de bord | {{ parent() }}
 
     <div class="form-group">
       <div class="col-sm-offset-6 col-sm-6">
-        <button type="submit" name="subvalider" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Ajouter</button>
+        <button type="submit" name="subvalider" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
       </div>
     </div>
 </form>
