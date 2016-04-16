@@ -49,7 +49,6 @@ class RecepcionPagoController extends Controller
             'proveedores' => $proveedores,
             'entitiesLength' => $entitiesLength));
     }
-
     /**
      * RecepcionPago list using ajax
      * @Secure(roles="ROLE_USER")
@@ -82,27 +81,64 @@ class RecepcionPagoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($form->isValid()) {
-            $entity->setEstado(3);
-            // Setear el estado a 'Sin estado'
-            $aprobadoEntity = $em->getRepository('BenDoctorsBundle:EstaAprobado')->find(1);
-            //exit(\Doctrine\Common\Util\Debug::dump($aprobadoEntity));
-            $entity->setEstaAprobado($aprobadoEntity);
-            $em->persist($entity);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('info', "Acta de recepción/pago guardado exitosamente.");
-            return $this->redirect($this->generateUrl('recepcion_pago_show', array('id' => $entity->getId())));
+            $data = $form->getData();
+            
+            //exit(var_dump($request->get('guardar')));
+            //exit(var_dump($data['guardar']));
+            if($request->get('guardar') == "1"){
+                //exit(\Doctrine\Common\Util\Debug::dump("GUARDAR"));
+                $entity->setEstado(3);
+                // Setear el estado a 'Sin estado'
+                $aprobadoEntity = $em->getRepository('BenDoctorsBundle:EstaAprobado')->find(1);
+                //exit(\Doctrine\Common\Util\Debug::dump($aprobadoEntity));
+                $entity->setEstaAprobado($aprobadoEntity);
+                $entity->getLineaTrabajo()->setCorrelativo($entity->getLineaTrabajo()->getCorrelativo()+1);
+                $em->persist($entity);
+                $em->flush();
+    
+                $this->get('session')->getFlashBag()->add('info', "Acta de recepción/pago guardado exitosamente.");
+                return $this->redirect($this->generateUrl('recepcion_pago_show', array('id' => $entity->getId())));
+            }
+            if($request->get('guardar_y_continuar') == "2"){
+                //exit(\Doctrine\Common\Util\Debug::dump("GUARDAR Y CONTINUAR"));
+                $entity->setEstado(3);
+                // Setear el estado a 'Sin estado'
+                $aprobadoEntity = $em->getRepository('BenDoctorsBundle:EstaAprobado')->find(1);
+                //exit(\Doctrine\Common\Util\Debug::dump($aprobadoEntity));
+                $entity->setEstaAprobado($aprobadoEntity);
+                $correlativo_mas_uno = $entity->getLineaTrabajo()->getCorrelativo()+1;
+                $entity->getLineaTrabajo()->setCorrelativo($correlativo_mas_uno);
+                $em->persist($entity);
+                $em->flush();
+    
+                $correlativo_mas_dos = $correlativo_mas_uno + 1;
+                $entity->setNumeroReferencia($correlativo_mas_dos);
+                $form = $this->createForm(new RecepcionPago1Type(), $entity);
+                $em = $this->getDoctrine()->getManager();
+                // $cities = $em->getRepository('BenDoctorsBundle:Person')->getCities();
+                
+                $this->get('session')->getFlashBag()->add('info', "Acta de recepción/pago guardado exitosamente.");
+                return $this->render('BenDoctorsBundle:RecepcionPago:new_continue.html.twig', array(
+                    'entity' => $entity,
+                    'form'   => $form->createView()
+                ));
+            }
+            /*if($form->get('guardar')->isClicked()){
+                exit(\Doctrine\Common\Util\Debug::dump("GUARDAR"));
+            }
+            if($form->get('guardar_y_continuar')->isClicked()){
+                exit(\Doctrine\Common\Util\Debug::dump("GUARDAR Y CONTINUAR"));
+            }*/
+            
         }
         // $cities = $em->getRepository('BenDoctorsBundle:Person')->getCities();
 
         $this->get('session')->getFlashBag()->add('danger', "Se encontraron errores en el formulario al intentar guardar la información !");
         return $this->render('BenDoctorsBundle:RecepcionPago:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
-            // 'cities' => $cities,
+            'form'   => $form->createView()
         ));
     }
-
     /**
      * Displays a form to create a new Person entity.
      * @Secure(roles="ROLE_USER")
@@ -118,10 +154,8 @@ class RecepcionPagoController extends Controller
         return $this->render('BenDoctorsBundle:RecepcionPago:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            // 'cities' => $cities,
         ));
     }
-
     /**
      * Finds and displays a Person entity.
      * @Secure(roles="ROLE_USER")
@@ -144,7 +178,6 @@ class RecepcionPagoController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
-
     /**
      * Displays a form to edit an existing Person entity.
      * @Secure(roles="ROLE_USER")
@@ -275,7 +308,6 @@ class RecepcionPagoController extends Controller
 
         return $this->redirect($this->generateUrl('recepcion_pago'));
     }
-
     /**
      * Creates a form to delete a Person entity by id.
      *
@@ -290,7 +322,6 @@ class RecepcionPagoController extends Controller
             ->getForm()
         ;
     }
-
     /**
      * Deletes multiple entities
      * @Secure(roles="ROLE_ADMIN")
@@ -305,7 +336,6 @@ class RecepcionPagoController extends Controller
 
         return new Response('1');
     }
-    
     /**
      * Deletes multiple entities
      * @Secure(roles="ROLE_ADMIN")
@@ -323,7 +353,25 @@ class RecepcionPagoController extends Controller
                             'alfa' => array('$','&','#'));}*/
         return new JsonResponse($lineaTrabajos);
     }
-    
+    /**
+     * Deletes multiple entities
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function correlativoLineaTrabajoAction(Request $request)
+    {
+        $linea_trabajo_id = $request->get('linea_trabajo_id');
+     
+        $em = $this->getDoctrine()->getManager();
+        $correlativo = $em->getRepository('BenDoctorsBundle:LineaTrabajo')
+                            ->findByCorrelativoLineaTrabajoId($linea_trabajo_id);
+        
+        //exit(\Doctrine\Common\Util\Debug::dump("HOLA"));
+        /*$lineaTrabajos = array(
+                            'number' => array('1','2','3'),
+                            'alfabeth' => array('a','b','c'),
+                            'alfa' => array('$','&','#'));}*/
+        return new JsonResponse($correlativo);
+    }
     public function aprobarAction(Request $request, $users)
     {
         //exit(\Doctrine\Common\Util\Debug::dump(array("APROBAR",$users)));
@@ -350,7 +398,6 @@ class RecepcionPagoController extends Controller
         $this->get('session')->getFlashBag()->add('info', "Acta de recepción/pago aprobadas exitosamente.");
         return $this->redirect($this->generateUrl('recepcion_pago'));
     }
-    
     public function generarNotaEnvioPdfAction(Request $request, $users)
     {
         //exit(\Doctrine\Common\Util\Debug::dump(array("NOTA ENVIO",$users)));

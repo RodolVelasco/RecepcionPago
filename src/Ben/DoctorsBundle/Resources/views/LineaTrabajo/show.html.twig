@@ -22,7 +22,11 @@ Tableau de bord | {{ parent() }}
             </tr>
             <tr>
                 <th>Estado</th>
-                <td> {% if entity.estado == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+                <td> {% if entity.Estado.id == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+            </tr>
+            <tr>
+                <th>Correlativo</th>
+                <td>{{ entity.correlativo }}</td>
             </tr>
         </tbody>
     </table>

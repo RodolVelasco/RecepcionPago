@@ -15,9 +15,16 @@ https://mws-rodolvelasco.c9users.io/phpmyadmin
 usr: rodolvelasco
 sin  password
 ===========================================================
-GITHUB
+GITHUB 
+( https://guides.github.com/introduction/getting-your-project-on-github/)
+http://lepidllama.net/blog/how-to-push-an-existing-cloud9-project-to-github/
 
+Add your files and commits, as you normally would:
+git add .
+git commit -m "First commit"
+Push your changes:
 git push -u origin master
+Admire your updated repository on GitHub
 
 ===========================================================
 

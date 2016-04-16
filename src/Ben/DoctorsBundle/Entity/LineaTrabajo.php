@@ -59,6 +59,13 @@ class LineaTrabajo
     protected $unidad;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="correlativo", type="integer", length=11)
+     */
+    private $correlativo;
+
+    /**
      * @ORM\OneToMany(targetEntity="Ben\DoctorsBundle\Entity\RecepcionPago", mappedBy="lineaTrabajo")
      */
     protected $recepcion_pagos;
@@ -231,5 +238,29 @@ class LineaTrabajo
     public function getUnidad()
     {
         return $this->unidad;
+    }
+
+    /**
+     * Set correlativo
+     *
+     * @param integer $correlativo
+     *
+     * @return LineaTrabajo
+     */
+    public function setCorrelativo($correlativo)
+    {
+        $this->correlativo = $correlativo;
+
+        return $this;
+    }
+
+    /**
+     * Get correlativo
+     *
+     * @return integer
+     */
+    public function getCorrelativo()
+    {
+        return $this->correlativo;
     }
 }

@@ -44,6 +44,11 @@ select_linea_trabajos:
     defaults: { _controller: "BenDoctorsBundle:RecepcionPago:lineaTrabajo" }
     requirements: { _method: post }
     
+correlativo_linea_trabajos:
+    path:     /correlativo_linea_trabajos
+    defaults: { _controller: "BenDoctorsBundle:RecepcionPago:correlativoLineaTrabajo" }
+    requirements: { _method: post }
+    
 recepcion_pago_aprobar:
     pattern:     /aprobar/{users}
     defaults: { _controller: "BenDoctorsBundle:RecepcionPago:aprobar" }

@@ -22,7 +22,7 @@ Unidad | {{ parent() }}
                 </tr>
                 <tr>
                     <th>Estado</th>
-                    <td> {% if entity.estado == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+                    <td> {% if entity.Estado.id == 1 %} Activo {% else %} Inactivo {% endif %} </td>
                 </tr>
             </tbody>
         </table>
@@ -39,13 +39,15 @@ Unidad | {{ parent() }}
                         <th>Nombre</th>
                         <th>Periodo</th>
                         <th>Estado</th>
+                        <th>Correlativo</th>
                     </tr>
                     {% for item in entity.lineatrabajos %}
                     <tr>
                         <td>{{ item.codigo }}</td>
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.anio }}</td>
-                        <td> {% if item.estado == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+                        <td> {% if item.Estado.id == 1 %} Activo {% else %} Inactivo {% endif %} </td>
+                        <td>{{ item.correlativo }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -53,7 +55,7 @@ Unidad | {{ parent() }}
         </div>
     </div>
     <div class="col-md-2">
-        <form id="deleteForm" action="{{ path('unidad_delete', { 'id': entity.id }) }}" method="DELETE">
+        <form id="deleteForm" action="{{ path('unidad_delete', { 'id': entity.id }) }}" method="POST">
             <a class="btn btn-primary btn-block" href="{{ path('unidad') }}">Ver listado</a>
             <a class="btn btn-info btn-block" href="{{ path('unidad_edit', { 'id': entity.id }) }}">Editar</a>
             <a class="btn btn-info btn-block" id="btnPrint"><span class="glyphicon glyphicon-print"></span> Imprimir</a>

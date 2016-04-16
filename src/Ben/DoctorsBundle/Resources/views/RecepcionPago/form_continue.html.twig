@@ -1,0 +1,41 @@
+<legend>Información general</legend>  
+  {# {{ form_row(form.periodo, {'attr': {'required': 'true'}} ) }} #}
+  {{ form_row(form.periodo, {'label' : 'Periodo', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.fechaFirma, { 'label': 'Fecha de firma del acta', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.unidad, { 'label': 'Unidad presupuestaria', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.lineaTrabajo, { 'label': 'Línea de trabajo', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.proveedor, { 'label': 'Proveedor', 'attr': {'required': 'true'}}) }}
+  
+<legend>Información de acta</legend>
+  {{ form_row(form.fechaRecepcionOdcContrato, { 'label': 'Fecha Recepción de la ODC / Contrato'}) }}
+  {{ form_row(form.fechaActa, { 'label': 'Fecha del acta', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.numeroActa, { 'label': 'No. de acta', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+  {{ form_row(form.periodoMes, { 'label': 'Periodo / Mes', 'attr': {'required': 'true'}}) }}
+
+<legend>Información de factura/quedan</legend>
+  {{ form_row(form.numeroFactura, { 'label': 'Factura no.', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.valorFactura, { 'label': 'Valor', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+  {{ form_row(form.numeroQuedan, { 'label': 'No. de quedan', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+  {{ form_row(form.fechaQuedan, { 'label': 'Fecha de quedan', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+  
+<legend>Tipo de proceso</legend>
+  {{ form_row(form.tipoContratacion, { 'label': 'Tipo de contratación', 'attr': {'required': 'true'}}) }}
+  {{ form_row(form.numeroReferencia, { 'label': 'Número de referencia', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+
+  {{ form_row(form.comentarios, { 'label': 'Comentarios', 'attr': {'required': 'true','style': 'color: red;'}}) }}
+  
+  {# {{ form_row(form.archivo) }} #}
+		    {# {% if file_url is defined and file_url != "" %}
+		      <div id="file_attached">
+		        <li>{{ asset(file_url) }} - <a href="{{ asset(file_url) }}">Descargar <br/><img src="{{ asset('images/attachment.png')}}"></a></li>
+		      </div>
+        {% endif %} #}
+  {# {% if form.archivo.vars.value.name is defined %}
+      {% if form.archivo.vars.value.name is not null %}
+      	<label style="padding-bottom: 40px;">Descargar Archivo: </label> <a href="{{ asset( form.archivo.vars.value.webpath ) }}">{{ form.archivo.vars.value.name }}</a>
+      {% else %}
+      	<label style="padding-bottom: 40px;">Descargar Archivo: </label> <a href="{{ asset( form.archivo.vars.value.webpath ) }}">Clic Aquí</a> 
+      {% endif %}
+  {% endif %} #}
+  {# {{ form_row(form.estaAprobado) }} #}
+  {{ form_rest(form) }} 

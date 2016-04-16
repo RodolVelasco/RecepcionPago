@@ -59,6 +59,13 @@ class LineaTrabajo
     protected $unidad;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="correlativo", type="integer", length=11)
+     */
+    private $correlativo;
+
+    /**
      * @ORM\OneToMany(targetEntity="Ben\DoctorsBundle\Entity\RecepcionPago", mappedBy="lineaTrabajo")
      */
     protected $recepcion_pagos;

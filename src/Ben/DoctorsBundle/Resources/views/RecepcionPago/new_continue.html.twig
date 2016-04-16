@@ -12,7 +12,7 @@ Tableau de bord | {{ parent() }}
 
 <form action="{{ path('recepcion_pago_create') }}"  class="form-horizontal col-md-8" method="post">
 
-    {% include "BenDoctorsBundle:RecepcionPago:form.html.twig" %}
+    {% include "BenDoctorsBundle:RecepcionPago:form_continue.html.twig" %}
 
     <div class="form-group">
       <div class="col-sm-offset-6 col-sm-6">
@@ -52,11 +52,11 @@ Tableau de bord | {{ parent() }}
               unidad_id: $(this).val()
           };
        
-          $.ajax({ // ajax post 1
+          $.ajax({
               type: 'post',
               url: '{{ path("select_linea_trabajos") }}',
               data: data,
-              success: function(data) { // success 1
+              success: function(data) {
                   var $linea_trabajo_selector = $('#ben_recepcion_pago_lineaTrabajo');
                   
                   $linea_trabajo_selector.html('<option></option>');
@@ -71,12 +71,6 @@ Tableau de bord | {{ parent() }}
                     $('#ben_recepcion_pago_lineaTrabajo').select2({
                       placeholder: "No se encontraron líneas de trabajo"
                     });
-                    /*$linea_trabajo_selector
-                        .find('option')
-                        .remove()
-                        .end()
-                        .append('<option value="0">Sin resultados</option>')
-                        .val('');*/
                   }else{
                     $('#ben_recepcion_pago_lineaTrabajo').select2({
                       placeholder: "Se encontraron líneas de trabajo"
@@ -107,8 +101,8 @@ Tableau de bord | {{ parent() }}
                   /*$.each(data, function(key, element) {
                       alert('key: ' + key + '\n' + 'value: ' + element.id);
                   });*/
-              } // fin success 1
-          }); // fin ajax post 1
+              }
+          });
       });
 
     })(jQuery);

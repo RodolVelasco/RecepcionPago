@@ -65,4 +65,13 @@ class LineaTrabajoRepository extends EntityRepository
        
        return $query->getArrayResult();
     }
+    public function findByCorrelativoLineaTrabajoId($linea_trabajo_id){
+        
+       $query = $this->getEntityManager()->createQuery("
+        SELECT lt FROM BenDoctorsBundle:LineaTrabajo lt 
+		WHERE lt.id = :lineaTrabajoId
+        ")->setParameter('lineaTrabajoId', $linea_trabajo_id);
+       
+       return $query->getArrayResult();
+    }
 }

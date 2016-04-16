@@ -18,7 +18,8 @@ class LineaTrabajoType extends AbstractType
             ->add('codigo')
             ->add('nombre')
             ->add('anio')
-            ->add('estado');
+            ->add('estado')
+            ->add('correlativo');
     }
     
     /**
