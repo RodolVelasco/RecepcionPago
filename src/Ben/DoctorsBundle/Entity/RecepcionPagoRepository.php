@@ -18,7 +18,7 @@ class RecepcionPagoRepository extends EntityRepository
         extract($searchParam);
         $qb = $this->createQueryBuilder('rp')
                    ->leftJoin('rp.proveedor','p')
-                   ->addSelect('rp')
+                   ->addSelect('p')
                    ->leftJoin('rp.unidad','u')
                    ->addSelect('u')
                    ->leftJoin('rp.lineaTrabajo','lt')
